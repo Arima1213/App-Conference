@@ -29,9 +29,14 @@ class SeminarFeeResource extends Resource
                         'international' => 'International',
                     ])
                     ->required(),
-                Forms\Components\TextInput::make('category')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('category')
+                    ->options([
+                        'IEEE member' => 'IEEE member',
+                        'Non-IEEE Member' => 'Non-IEEE Member',
+                        'Student IEEE Member' => 'Student IEEE Member',
+                        'Student Non-IEEE Member' => 'Student Non-IEEE Member',
+                    ])
+                    ->required(),
                 Forms\Components\TextInput::make('early_bird_price')
                     ->required()
                     ->numeric()
