@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Speaker extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+        'position',
+        'bio',
+        'photo',
+    ];
 }
