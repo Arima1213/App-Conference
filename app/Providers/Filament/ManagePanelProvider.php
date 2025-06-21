@@ -26,7 +26,10 @@ class ManagePanelProvider extends PanelProvider
             ->default()
             ->id('manage')
             ->path('manage')
+            ->spa()
             ->login()
+            ->profile()
+            ->passwordReset()
             ->colors([
                 'primary' => Color::Amber,
             ])
