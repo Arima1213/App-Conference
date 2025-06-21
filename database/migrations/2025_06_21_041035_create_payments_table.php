@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('participant_id')->constrained('participants')->onDelete('cascade');
+            $table->string('invoice_code')->unique();
+            $table->decimal('amount', 12, 2);
+            $table->timestamp('paid_at')->nullable();
+            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->string('payment_method')->nullable(); // e.g. Midtrans VA, Gopay
+            $table->string('va_number')->nullable();
             $table->timestamps();
         });
     }
