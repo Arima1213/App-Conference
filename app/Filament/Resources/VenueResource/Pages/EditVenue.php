@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\VanueResource\Pages;
+namespace App\Filament\Resources\VenueResource\Pages;
 
-use App\Filament\Resources\VanueResource;
+use App\Filament\Resources\VenueResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditVanue extends EditRecord
+class EditVenue extends EditRecord
 {
-    protected static string $resource = VanueResource::class;
+    protected static string $resource = VenueResource::class;
 
     protected function getHeaderActions(): array
     {
