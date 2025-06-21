@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ParticipantCategory extends Model
 {
-    //
+    protected $table = 'participant_categories';
+
+    protected $fillable = [
+        'name',
+    ];
 }
