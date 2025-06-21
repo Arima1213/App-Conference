@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('speakers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('position')->nullable(); // e.g. Business Manager
+            $table->text('bio')->nullable();        // optional, jika ingin detail
+            $table->string('photo')->nullable();    // path ke foto pembicara
             $table->timestamps();
         });
     }
