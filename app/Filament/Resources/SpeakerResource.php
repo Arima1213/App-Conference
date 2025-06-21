@@ -23,7 +23,18 @@ class SpeakerResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('position')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('bio')
+                    ->required(),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->directory('speakers/photos')
+                    ->required(),
             ]);
     }
 
@@ -31,7 +42,10 @@ class SpeakerResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('position')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('bio')->limit(50),
+                Tables\Columns\ImageColumn::make('photo')->disk('public')->circular(),
             ])
             ->filters([
                 //
