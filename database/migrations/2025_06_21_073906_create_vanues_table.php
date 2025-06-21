@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vanues', function (Blueprint $table) {
+        Schema::create('venues', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('address')->nullable();
+            $table->text('map_url')->nullable(); // embed Google Maps
             $table->timestamps();
         });
     }
