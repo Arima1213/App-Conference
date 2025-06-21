@@ -23,7 +23,21 @@ class SeminarFeeResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('type')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('category')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('early_bird_price')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('regular_price')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('currency')
+                    ->required()
+                    ->maxLength(10),
             ]);
     }
 
@@ -31,7 +45,11 @@ class SeminarFeeResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('type')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('category')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('early_bird_price')->sortable(),
+                Tables\Columns\TextColumn::make('regular_price')->sortable(),
+                Tables\Columns\TextColumn::make('currency')->sortable()->searchable(),
             ])
             ->filters([
                 //
