@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('important_dates', function (Blueprint $table) {
             $table->id();
+            $table->string('title'); // e.g., Submission Deadline
+            $table->date('date');
+            $table->string('description')->nullable(); // e.g., "Last date to submit papers"
             $table->timestamps();
         });
     }
