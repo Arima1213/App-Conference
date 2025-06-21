@@ -24,6 +24,13 @@ class ParticipantPanelProvider extends PanelProvider
     {
         return $panel
             ->id('participant')
+            ->topNavigation()
+            ->login()
+            ->profile()
+            ->passwordReset()
+            ->emailVerification()
+            ->registration()
+            ->spa()
             ->path('participant')
             ->colors([
                 'primary' => Color::Amber,
