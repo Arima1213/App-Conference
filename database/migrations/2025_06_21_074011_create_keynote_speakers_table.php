@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('keynote_speakers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('institution')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('photo')->nullable(); // path atau URL ke foto
             $table->timestamps();
         });
     }
