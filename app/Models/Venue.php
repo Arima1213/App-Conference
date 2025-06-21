@@ -11,4 +11,9 @@ class Venue extends Model
         'address',
         'map_url',
     ];
+
+    public function conferences()
+    {
+        return $this->hasMany(Conference::class);
+    }
 }

@@ -19,4 +19,9 @@ class Schedule extends Model
     {
         return $this->belongsTo(Speaker::class);
     }
+
+    public function conferences()
+    {
+        return $this->hasMany(Conference::class);
+    }
 }
