@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('conferences', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->foreignId('venue_id')->nullable()->constrained('venues')->nullOnDelete();
+            $table->string('banner')->nullable(); // path ke gambar banner
+            $table->boolean('is_active')->default(true); // default konferensi aktif
             $table->timestamps();
         });
     }
