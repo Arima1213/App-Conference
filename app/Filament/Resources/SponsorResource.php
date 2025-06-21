@@ -23,7 +23,17 @@ class SponsorResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\FileUpload::make('logo')
+                    ->image()
+                    ->directory('sponsor-logos')
+                    ->nullable(),
+                Forms\Components\TextInput::make('website')
+                    ->url()
+                    ->maxLength(255)
+                    ->nullable(),
             ]);
     }
 
@@ -31,7 +41,10 @@ class SponsorResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
+                Tables\Columns\ImageColumn::make('logo')->disk('public')->label('Logo'),
+                Tables\Columns\TextColumn::make('website')->label('Website')->limit(30),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Created At')->sortable(),
             ])
             ->filters([
                 //
