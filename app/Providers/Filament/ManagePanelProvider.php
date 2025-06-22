@@ -28,6 +28,7 @@ class ManagePanelProvider extends PanelProvider
             ->path('manage')
             ->spa()
             ->login()
+            ->sidebarCollapsibleOnDesktop()
             ->profile()
             ->passwordReset()
             ->colors([

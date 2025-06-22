@@ -25,6 +25,7 @@ class ParticipantPanelProvider extends PanelProvider
         return $panel
             ->id('participant')
             ->topNavigation()
+            ->sidebarCollapsibleOnDesktop()
             ->login()
             ->profile()
             ->passwordReset()
