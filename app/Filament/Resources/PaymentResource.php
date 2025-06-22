@@ -23,7 +23,28 @@ class PaymentResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Select::make('participant_id')
+                    ->relationship('participant', 'name')
+                    ->required(),
+                Forms\Components\TextInput::make('invoice_code')
+                    ->unique(ignoreRecord: true)
+                    ->required(),
+                Forms\Components\TextInput::make('amount')
+                    ->numeric()
+                    ->required(),
+                Forms\Components\DateTimePicker::make('paid_at'),
+                Forms\Components\Select::make('payment_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'paid' => 'Paid',
+                        'failed' => 'Failed',
+                    ])
+                    ->default('pending')
+                    ->required(),
+                Forms\Components\TextInput::make('payment_method')
+                    ->nullable(),
+                Forms\Components\TextInput::make('va_number')
+                    ->nullable(),
             ]);
     }
 
@@ -31,10 +52,34 @@ class PaymentResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable(),
+                Tables\Columns\TextColumn::make('participant.name')->label('Participant')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('invoice_code')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('amount')->money('IDR', true)->sortable(),
+                Tables\Columns\TextColumn::make('paid_at')->dateTime()->sortable(),
+                Tables\Columns\BadgeColumn::make('payment_status')
+                    ->enum([
+                        'pending' => 'Pending',
+                        'paid' => 'Paid',
+                        'failed' => 'Failed',
+                    ])
+                    ->colors([
+                        'primary' => 'pending',
+                        'success' => 'paid',
+                        'danger' => 'failed',
+                    ])
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('payment_method')->sortable(),
+                Tables\Columns\TextColumn::make('va_number')->sortable(),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('payment_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'paid' => 'Paid',
+                        'failed' => 'Failed',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
