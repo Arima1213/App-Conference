@@ -64,10 +64,14 @@ class ConferenceResource extends Resource
                                         ->label('Speaker'),
                                     Forms\Components\DateTimePicker::make('start_time')
                                         ->required()
-                                        ->label('Start Date & Time'),
+                                        ->label('Start Date & Time')
+                                        ->displayFormat('Y-m-d H:i')
+                                        ->native(false), // non-native untuk custom UI
                                     Forms\Components\DateTimePicker::make('end_time')
                                         ->required()
-                                        ->label('End Date & Time'),
+                                        ->label('End Date & Time')
+                                        ->displayFormat('Y-m-d H:i')
+                                        ->native(false), // non-native untuk custom UI
                                 ])
                                 ->createItemButtonLabel('Add Schedule')
                                 ->columns(2),
