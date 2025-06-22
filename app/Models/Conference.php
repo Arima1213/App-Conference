@@ -13,12 +13,12 @@ class Conference extends Model
         'is_active',
     ];
 
-    public function schedule()
+    public function schedules()
     {
         return $this->hasMany(Schedule::class);
     }
 
-    public function venue()
+    public function venues()
     {
         return $this->hasMany(Venue::class);
     }
