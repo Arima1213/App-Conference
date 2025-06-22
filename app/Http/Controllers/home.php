@@ -29,6 +29,20 @@ class home extends Controller
             })
             ->first();
 
+        // Jika tidak ada conference mendatang, ambil conference terakhir (meskipun sudah lewat)
+        if (!$conference) {
+            $conference = Conference::where('is_active', true)
+                ->whereHas('schedules')
+                ->with(['schedules' => function ($query) {
+                    $query->orderBy('start_time', 'desc');
+                }])
+                ->get()
+                ->sortByDesc(function ($conf) {
+                    return optional($conf->schedules->first())->start_time;
+                })
+                ->first();
+        }
+
         dd($conference);
 
         $conferences = $conference ? [$conference] : [];
