@@ -29,6 +29,7 @@ class ConferenceResource extends Resource
                             Forms\Components\FileUpload::make('banner')
                                 ->image()
                                 ->directory('conference-banners')
+                                ->disk('public')
                                 ->maxSize(2048)
                                 ->nullable()
                                 ->columnSpanFull(),
@@ -112,12 +113,6 @@ class ConferenceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('banner')
-                    ->label('Banner')
-                    ->disk('public')
-                    ->circular()
-                    ->height(48)
-                    ->width(48),
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title')
                     ->searchable()
