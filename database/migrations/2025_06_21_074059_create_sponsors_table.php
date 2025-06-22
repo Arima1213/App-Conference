@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sponsors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
             $table->string('name');
             $table->string('logo')->nullable(); // path ke logo
             $table->string('website')->nullable();

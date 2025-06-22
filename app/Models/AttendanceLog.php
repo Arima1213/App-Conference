@@ -10,6 +10,7 @@ class AttendanceLog extends Model
 
     protected $fillable = [
         'participant_id',
+        'conference_id',
         'scanned_by',
         'status',
         'scanned_at',
@@ -22,6 +23,11 @@ class AttendanceLog extends Model
     public function participant()
     {
         return $this->belongsTo(Participant::class);
+    }
+
+    public function conference()
+    {
+        return $this->belongsTo(Conference::class);
     }
 
     public function scanner()

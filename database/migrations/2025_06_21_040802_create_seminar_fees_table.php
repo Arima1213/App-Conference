@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('seminar_fees', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
             $table->enum('type', ['national', 'international']);
             $table->string('category'); // e.g., IEEE Member, Non-IEEE Member
             $table->decimal('early_bird_price', 10, 2);

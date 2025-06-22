@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('attendance_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('participant_id')->constrained('participants')->onDelete('cascade');
-            $table->foreignId('scanned_by')->constrained('users')->onDelete('cascade'); // panitia yang scan
+            $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
+            $table->foreignId('scanned_by')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['present', 'not_present'])->default('present');
             $table->timestamp('scanned_at')->useCurrent();
             $table->timestamps();

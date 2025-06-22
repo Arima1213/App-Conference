@@ -22,4 +22,14 @@ class Conference extends Model
     {
         return $this->hasMany(Venue::class);
     }
+
+    public function sponsors()
+    {
+        return $this->hasMany(Sponsor::class);
+    }
+
+    public function seminarFees()
+    {
+        return $this->hasMany(SeminarFee::class);
+    }
 }

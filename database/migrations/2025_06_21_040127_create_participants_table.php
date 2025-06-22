@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('university')->nullable();
             $table->string('phone');
             $table->string('participant_code')->unique();
-            $table->foreignId('category_id')->nullable()->constrained('participant_categories');
             $table->string('paper_title')->nullable();
             $table->string('qrcode')->nullable(); // path ke file QR atau base64
             $table->enum('status', ['unverified', 'verified', 'arrived'])->default('unverified');

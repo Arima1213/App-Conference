@@ -29,6 +29,12 @@ class AttendanceLogResource extends Resource
                     ->searchable()
                     ->required(),
 
+                Forms\Components\Select::make('conference_id')
+                    ->label('Conference')
+                    ->relationship('conference', 'name')
+                    ->searchable()
+                    ->required(),
+
                 Forms\Components\Select::make('scanned_by')
                     ->label('Scanned By')
                     ->relationship('scannedBy', 'name')
@@ -57,6 +63,11 @@ class AttendanceLogResource extends Resource
 
                 Tables\Columns\TextColumn::make('participant.name')
                     ->label('Participant')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('conference.name')
+                    ->label('Conference')
                     ->searchable()
                     ->sortable(),
 
@@ -92,6 +103,9 @@ class AttendanceLogResource extends Resource
                         'present' => 'Present',
                         'not_present' => 'Not Present',
                     ]),
+                Tables\Filters\SelectFilter::make('conference_id')
+                    ->label('Conference')
+                    ->relationship('conference', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
