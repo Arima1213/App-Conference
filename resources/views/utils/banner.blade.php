@@ -4,7 +4,7 @@
 			@php
 				$schedule = $conference->schedules->first();
 				$date = $schedule ? \Carbon\Carbon::parse($schedule->start_time)->format('d M Y') : '-';
-				$background = $conference->banner_image ?? 'assets/img/slide1-home-2.jpg';
+				$background = $conference->banner ? 'storage/' . $conference->banner : 'assets/img/slide1-home-2.jpg';
 			@endphp
 			<div class="conference-slide" style="background-image: url('{{ asset($background) }}');">
 				<img class="conference-slide-tringle" src="{{ asset('assets/img/effect-tringle-slider.svg') }}" alt="Triangle Effect">
@@ -12,8 +12,13 @@
 				<div class="container">
 					<div class="conference-slide-item">
 						<div class="date">{{ $date }}</div>
-						<div class="conference-slider-title">{{ $conference->subtitle ?? 'No Subtitle' }}</div>
-						<h2 class="title"><span>{{ $conference->title ?? 'No Title' }}</span></h2>
+						@php
+							$titleParts = explode(' ', $conference->title ?? 'No Title', 2);
+							$subtitle = $titleParts[0] ?? '';
+							$title = $titleParts[1] ?? '';
+						@endphp
+						<div class="conference-slider-title">{{ $subtitle }}</div>
+						<h2 class="title"><span>{{ $title }}</span></h2>
 						<p>{{ $conference->description ?? 'No description available.' }}</p>
 					</div>
 				</div>

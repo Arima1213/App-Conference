@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conference;
 use Illuminate\Http\Request;
 
 class home extends Controller
@@ -13,18 +14,30 @@ class home extends Controller
      */
     public function index()
     {
-        $conference = \App\Models\Conference::where('is_active', true)
+        // Ambil conference aktif yang memiliki jadwal mendatang
+        $conference = Conference::where('is_active', true)
             ->whereHas('schedules', function ($query) {
                 $query->where('start_time', '>=', now());
             })
             ->with(['schedules' => function ($query) {
-                $query->orderBy('start_time', 'asc');
+                $query->where('start_time', '>=', now())
+                    ->orderBy('start_time', 'asc');
             }])
-            ->orderByRaw('(select min(start_time) from schedules where schedules.conference_id = conferences.id) asc')
+            ->get()
+            ->sortBy(function ($conf) {
+                return optional($conf->schedules->first())->start_time;
+            })
             ->first();
+
+        dd($conference);
+
         $conferences = $conference ? [$conference] : [];
 
-        dd($conferences);
-        return view('index', ['conferences' => $conferences]);
+        // Ambil waktu countdown dari jadwal terdekat (jika ada)
+        $countdownTime = $conference && $conference->schedules->first()
+            ? $conference->schedules->first()->start_time
+            : null;
+
+        return view('index', compact('conferences', 'countdownTime'));
     }
 }
