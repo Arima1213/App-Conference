@@ -16,4 +16,18 @@ class EditConference extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return static::$resource::getUrl('index'); // Redirect ke index setelah submit
+    }
+    protected function hasCreateAnother(): bool
+    {
+        return false; // hilangkan tombol 'Create & create another'
+    }
+    protected function getFormActions(): array
+    {
+        return []; // hilangkan tombol create bawaan
+
+    }
 }
