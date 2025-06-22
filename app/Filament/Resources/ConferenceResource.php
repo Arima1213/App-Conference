@@ -26,14 +26,22 @@ class ConferenceResource extends Resource
                 Forms\Components\Wizard::make([
                     Forms\Components\Wizard\Step::make('Informasi')
                         ->schema([
+                            Forms\Components\FileUpload::make('banner')
+                                ->image()
+                                ->directory('conference-banners')
+                                ->maxSize(2048)
+                                ->nullable()
+                                ->columnSpanFull(),
                             Forms\Components\TextInput::make('title')
                                 ->required()
                                 ->maxLength(255)
-                                ->columnSpan(2),
+                                ->columnSpanFull(),
                             Forms\Components\Textarea::make('description')
                                 ->rows(4)
                                 ->maxLength(65535)
-                                ->columnSpan(2),
+                                ->columnSpanFull(),
+                            Forms\Components\Hidden::make('is_active')
+                                ->default(true),
                         ]),
                     Forms\Components\Wizard\Step::make('Jadwal & Tempat')
                         ->schema([
@@ -54,8 +62,12 @@ class ConferenceResource extends Resource
                                         ->required()
                                         ->columnSpanFull()
                                         ->label('Speaker'),
-                                    Forms\Components\TimePicker::make('start_time')->required(),
-                                    Forms\Components\TimePicker::make('end_time')->required(),
+                                    Forms\Components\DateTimePicker::make('start_time')
+                                        ->required()
+                                        ->label('Start Date & Time'),
+                                    Forms\Components\DateTimePicker::make('end_time')
+                                        ->required()
+                                        ->label('End Date & Time'),
                                 ])
                                 ->createItemButtonLabel('Add Schedule')
                                 ->columns(2),
@@ -75,19 +87,6 @@ class ConferenceResource extends Resource
                                 ])
                                 ->createItemButtonLabel('Add Venue')
                                 ->columns(2),
-                        ]),
-                    Forms\Components\Wizard\Step::make('Banner & Status')
-                        ->schema([
-                            Forms\Components\FileUpload::make('banner')
-                                ->image()
-                                ->directory('conference-banners')
-                                ->maxSize(2048)
-                                ->nullable()
-                                ->columnSpanFull(),
-                            Forms\Components\Toggle::make('is_active')
-                                ->label('Active')
-                                ->default(true)
-                                ->columnSpanFull(),
                         ]),
                 ])
                     ->columns(2)

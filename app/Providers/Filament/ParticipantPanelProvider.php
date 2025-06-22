@@ -27,6 +27,7 @@ class ParticipantPanelProvider extends PanelProvider
             ->topNavigation()
             ->sidebarCollapsibleOnDesktop()
             ->login()
+            ->databaseNotifications()
             ->profile()
             ->passwordReset()
             ->emailVerification()

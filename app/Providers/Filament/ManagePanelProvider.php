@@ -29,6 +29,7 @@ class ManagePanelProvider extends PanelProvider
             ->spa()
             ->login()
             ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
             ->profile()
             ->passwordReset()
             ->colors([
