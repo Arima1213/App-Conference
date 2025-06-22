@@ -57,17 +57,23 @@ class ConferenceResource extends Resource
                                     Forms\Components\TimePicker::make('start_time')->required(),
                                     Forms\Components\TimePicker::make('end_time')->required(),
                                 ])
-                                ->createItemButtonLabel('Tambah Jadwal')
+                                ->createItemButtonLabel('Add Schedule')
                                 ->columns(2),
 
                             Forms\Components\Repeater::make('venues')
                                 ->relationship('venues') // relasi otomatis
                                 ->schema([
-                                    Forms\Components\TextInput::make('name')->required(),
-                                    Forms\Components\TextInput::make('address')->required(),
-                                    Forms\Components\TextInput::make('map_url')->url()->nullable(),
+                                    Forms\Components\TextInput::make('name')
+                                        ->columnSpanFull()
+                                        ->required(),
+                                    Forms\Components\TextInput::make('address')
+                                        ->columnSpanFull()
+                                        ->required(),
+                                    Forms\Components\TextInput::make('map_url')
+                                        ->columnSpanFull()
+                                        ->url()->nullable(),
                                 ])
-                                ->createItemButtonLabel('Tambah Lokasi')
+                                ->createItemButtonLabel('Add Venue')
                                 ->columns(2),
                         ]),
                     Forms\Components\Wizard\Step::make('Banner & Status')
