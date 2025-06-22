@@ -22,7 +22,7 @@ class ConferenceResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Wizard::make([
-                    Forms\Components\Wizard\Step::make('Informasi')
+                    Forms\Components\Wizard\Step::make('Information')
                         ->schema([
                             Forms\Components\FileUpload::make('banner')
                                 ->image()
@@ -30,50 +30,64 @@ class ConferenceResource extends Resource
                                 ->disk('public')
                                 ->maxSize(2048)
                                 ->nullable()
+                                ->label('Banner Image')
+                                ->helperText('Upload a banner image for the conference (max 2MB).')
                                 ->columnSpanFull(),
                             Forms\Components\TextInput::make('title')
                                 ->required()
                                 ->maxLength(255)
+                                ->label('Conference Title')
+                                ->placeholder('Enter the conference title')
                                 ->columnSpanFull(),
                             Forms\Components\Textarea::make('description')
                                 ->rows(4)
                                 ->maxLength(65535)
+                                ->label('Description')
+                                ->placeholder('Provide a brief description of the conference')
                                 ->columnSpanFull(),
-                            Forms\Components\Hidden::make('is_active')
-                                ->default(true),
+                            // Forms\Components\Toggle::make('is_active')
+                            //     ->label('Active')
+                            //     ->default(true)
+                            //     ->helperText('Set whether this conference is currently active.'),
                         ]),
-                    Forms\Components\Wizard\Step::make('Jadwal & Tempat')
+                    Forms\Components\Wizard\Step::make('Schedules')
                         ->schema([
                             Forms\Components\Repeater::make('schedules')
                                 ->relationship('schedules')
+                                ->label('Schedules')
+                                ->columnSpanFull()
                                 ->schema([
                                     Forms\Components\TextInput::make('title')
-                                        ->columnSpanFull()
-                                        ->required(),
+                                        ->required()
+                                        ->label('Schedule Title')
+                                        ->placeholder('Enter schedule title')
+                                        ->columnSpanFull(),
                                     Forms\Components\TextInput::make('subtitle')
-                                        ->columnSpanFull()
-                                        ->nullable(),
+                                        ->nullable()
+                                        ->label('Subtitle')
+                                        ->placeholder('Enter subtitle (optional)')
+                                        ->columnSpanFull(),
                                     Forms\Components\Textarea::make('description')
-                                        ->columnSpanFull()
-                                        ->nullable()->rows(2),
+                                        ->nullable()
+                                        ->rows(2)
+                                        ->label('Description')
+                                        ->placeholder('Describe this schedule (optional)')
+                                        ->columnSpanFull(),
                                     Forms\Components\Select::make('speaker_id')
                                         ->relationship('speaker', 'name')
                                         ->required()
-                                        ->columnSpanFull()
                                         ->label('Speaker')
                                         ->getOptionLabelFromRecordUsing(function ($record) {
-                                            // Tampilkan ikon bintang jika is_keynote = true
                                             return $record->name . ($record->is_keynote ? ' ⭐' : '');
                                         })
-                                        ->extraAttributes([
-                                            'x-data' => '{}',
-                                        ])
+                                        ->hint('Select the speaker for this schedule')
                                         ->hintAction(
                                             fn() => Forms\Components\Actions\Action::make('addSpeaker')
-                                                ->label('Tambah Speaker')
+                                                ->label('Add New Speaker')
                                                 ->url('/manage/speakers/create')
                                                 ->openUrlInNewTab()
-                                        ),
+                                        )
+                                        ->columnSpanFull(),
                                     Forms\Components\DateTimePicker::make('start_time')
                                         ->required()
                                         ->label('Start Date & Time')
@@ -86,31 +100,48 @@ class ConferenceResource extends Resource
                                         ->native(false),
                                 ])
                                 ->createItemButtonLabel('Add Schedule')
-                                ->columns(2),
-
+                                ->columns(2)
+                                ->helperText('Add one or more schedules for this conference.'),
+                        ]),
+                    Forms\Components\Wizard\Step::make('Venues')
+                        ->schema([
                             Forms\Components\Repeater::make('venues')
                                 ->relationship('venues')
-                                ->schema([
-                                    Forms\Components\TextInput::make('name')
-                                        ->columnSpanFull()
-                                        ->required(),
-                                    Forms\Components\TextInput::make('address')
-                                        ->columnSpanFull()
-                                        ->required(),
-                                    Forms\Components\TextInput::make('map_url')
-                                        ->columnSpanFull()
-                                        ->url()->nullable(),
-                                ])
-                                ->createItemButtonLabel('Add Venue')
-                                ->columns(2),
-                        ]),
-                    Forms\Components\Wizard\Step::make('Sponsor')
-                        ->schema([
-                            Forms\Components\Repeater::make('sponsors')
-                                ->relationship('sponsors')
+                                ->label('Venues')
+                                ->columnSpanFull()
                                 ->schema([
                                     Forms\Components\TextInput::make('name')
                                         ->required()
+                                        ->label('Venue Name')
+                                        ->placeholder('Enter venue name')
+                                        ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('address')
+                                        ->required()
+                                        ->label('Address')
+                                        ->placeholder('Enter venue address')
+                                        ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('map_url')
+                                        ->nullable()
+                                        ->url()
+                                        ->label('Map URL')
+                                        ->placeholder('Paste Google Maps URL (optional)')
+                                        ->columnSpanFull(),
+                                ])
+                                ->createItemButtonLabel('Add Venue')
+                                ->columns(2)
+                                ->helperText('List all venues for this conference.'),
+                        ]),
+                    Forms\Components\Wizard\Step::make('Sponsors')
+                        ->schema([
+                            Forms\Components\Repeater::make('sponsors')
+                                ->relationship('sponsors')
+                                ->label('Sponsors')
+                                ->columnSpanFull()
+                                ->schema([
+                                    Forms\Components\TextInput::make('name')
+                                        ->required()
+                                        ->label('Sponsor Name')
+                                        ->placeholder('Enter sponsor name')
                                         ->columnSpanFull(),
                                     Forms\Components\FileUpload::make('logo')
                                         ->image()
@@ -118,32 +149,45 @@ class ConferenceResource extends Resource
                                         ->disk('public')
                                         ->maxSize(1024)
                                         ->nullable()
+                                        ->label('Logo')
+                                        ->helperText('Upload sponsor logo (max 1MB).')
                                         ->columnSpanFull(),
                                     Forms\Components\TextInput::make('website')
-                                        ->url()
                                         ->nullable()
+                                        ->url()
+                                        ->label('Website')
+                                        ->placeholder('Enter sponsor website (optional)')
                                         ->columnSpanFull(),
                                 ])
                                 ->createItemButtonLabel('Add Sponsor')
-                                ->columns(2),
+                                ->columns(2)
+                                ->helperText('Add sponsors supporting this conference.'),
                         ]),
                     Forms\Components\Wizard\Step::make('Important Dates')
                         ->schema([
                             Forms\Components\Repeater::make('importantDates')
                                 ->relationship('importantDates')
+                                ->label('Important Dates')
+                                ->columnSpanFull()
                                 ->schema([
                                     Forms\Components\TextInput::make('title')
                                         ->required()
+                                        ->label('Date Title')
+                                        ->placeholder('Enter important date title')
                                         ->columnSpanFull(),
                                     Forms\Components\DatePicker::make('date')
                                         ->required()
+                                        ->label('Date')
                                         ->columnSpanFull(),
                                     Forms\Components\TextInput::make('description')
                                         ->nullable()
+                                        ->label('Description')
+                                        ->placeholder('Describe this date (optional)')
                                         ->columnSpanFull(),
                                 ])
                                 ->createItemButtonLabel('Add Important Date')
-                                ->columns(2),
+                                ->columns(2)
+                                ->helperText('Specify important dates related to this conference.'),
                         ]),
                 ])
                     ->columns(2)
