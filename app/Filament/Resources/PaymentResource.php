@@ -19,55 +19,55 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('seminar_fee_id')
-                    ->label('Seminar Fee')
-                    ->relationship('seminarFee', 'name')
-                    ->searchable()
-                    ->required()
-                    ->preload(),
-                Forms\Components\Select::make('participant_id')
-                    ->label('Participant')
-                    ->relationship('participant', 'name')
-                    ->searchable()
-                    ->required()
-                    ->preload(),
-                Forms\Components\TextInput::make('invoice_code')
-                    ->label('Invoice Code')
-                    ->unique(ignoreRecord: true)
-                    ->required()
-                    ->maxLength(50),
-                Forms\Components\TextInput::make('amount')
-                    ->label('Amount')
-                    ->numeric()
-                    ->prefix('IDR')
-                    ->required(),
-                Forms\Components\DateTimePicker::make('paid_at')
-                    ->label('Paid At')
-                    ->seconds(false)
-                    ->displayFormat('Y-m-d H:i'),
-                Forms\Components\Select::make('payment_status')
-                    ->label('Payment Status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'paid' => 'Paid',
-                        'failed' => 'Failed',
-                    ])
-                    ->default('pending')
-                    ->required(),
-                Forms\Components\TextInput::make('payment_method')
-                    ->label('Payment Method')
-                    ->maxLength(50)
-                    ->nullable(),
-                Forms\Components\TextInput::make('va_number')
-                    ->label('Virtual Account Number')
-                    ->maxLength(50)
-                    ->nullable(),
-            ]);
-    }
+    // public static function form(Form $form): Form
+    // {
+    //     return $form
+    //         ->schema([
+    //             Forms\Components\Select::make('seminar_fee_id')
+    //                 ->label('Seminar Fee')
+    //                 ->relationship('seminarFee', 'name')
+    //                 ->searchable()
+    //                 ->required()
+    //                 ->preload(),
+    //             Forms\Components\Select::make('participant_id')
+    //                 ->label('Participant')
+    //                 ->relationship('participant', 'name')
+    //                 ->searchable()
+    //                 ->required()
+    //                 ->preload(),
+    //             Forms\Components\TextInput::make('invoice_code')
+    //                 ->label('Invoice Code')
+    //                 ->unique(ignoreRecord: true)
+    //                 ->required()
+    //                 ->maxLength(50),
+    //             Forms\Components\TextInput::make('amount')
+    //                 ->label('Amount')
+    //                 ->numeric()
+    //                 ->prefix('IDR')
+    //                 ->required(),
+    //             Forms\Components\DateTimePicker::make('paid_at')
+    //                 ->label('Paid At')
+    //                 ->seconds(false)
+    //                 ->displayFormat('Y-m-d H:i'),
+    //             Forms\Components\Select::make('payment_status')
+    //                 ->label('Payment Status')
+    //                 ->options([
+    //                     'pending' => 'Pending',
+    //                     'paid' => 'Paid',
+    //                     'failed' => 'Failed',
+    //                 ])
+    //                 ->default('pending')
+    //                 ->required(),
+    //             Forms\Components\TextInput::make('payment_method')
+    //                 ->label('Payment Method')
+    //                 ->maxLength(50)
+    //                 ->nullable(),
+    //             Forms\Components\TextInput::make('va_number')
+    //                 ->label('Virtual Account Number')
+    //                 ->maxLength(50)
+    //                 ->nullable(),
+    //         ]);
+    // }
 
     public static function table(Table $table): Table
     {
@@ -128,7 +128,6 @@ class PaymentResource extends Resource
                         'paid' => 'Paid',
                         'failed' => 'Failed',
                     ]),
-                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
