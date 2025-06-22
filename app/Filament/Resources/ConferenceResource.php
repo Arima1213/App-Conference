@@ -44,7 +44,7 @@ class ConferenceResource extends Resource
                     Forms\Components\Wizard\Step::make('Jadwal & Tempat')
                         ->schema([
                             Forms\Components\Repeater::make('schedules')
-                                ->relationship('schedules') // penting agar otomatis tersimpan
+                                ->relationship('schedules')
                                 ->schema([
                                     Forms\Components\TextInput::make('title')
                                         ->columnSpanFull()
@@ -64,18 +64,18 @@ class ConferenceResource extends Resource
                                         ->required()
                                         ->label('Start Date & Time')
                                         ->displayFormat('Y-m-d H:i')
-                                        ->native(false), // non-native untuk custom UI
+                                        ->native(false),
                                     Forms\Components\DateTimePicker::make('end_time')
                                         ->required()
                                         ->label('End Date & Time')
                                         ->displayFormat('Y-m-d H:i')
-                                        ->native(false), // non-native untuk custom UI
+                                        ->native(false),
                                 ])
                                 ->createItemButtonLabel('Add Schedule')
                                 ->columns(2),
 
                             Forms\Components\Repeater::make('venues')
-                                ->relationship('venues') // relasi otomatis
+                                ->relationship('venues')
                                 ->schema([
                                     Forms\Components\TextInput::make('name')
                                         ->columnSpanFull()
@@ -88,6 +88,47 @@ class ConferenceResource extends Resource
                                         ->url()->nullable(),
                                 ])
                                 ->createItemButtonLabel('Add Venue')
+                                ->columns(2),
+                        ]),
+                    Forms\Components\Wizard\Step::make('Sponsor')
+                        ->schema([
+                            Forms\Components\Repeater::make('sponsors')
+                                ->relationship('sponsors')
+                                ->schema([
+                                    Forms\Components\TextInput::make('name')
+                                        ->required()
+                                        ->columnSpanFull(),
+                                    Forms\Components\FileUpload::make('logo')
+                                        ->image()
+                                        ->directory('sponsor-logos')
+                                        ->disk('public')
+                                        ->maxSize(1024)
+                                        ->nullable()
+                                        ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('website')
+                                        ->url()
+                                        ->nullable()
+                                        ->columnSpanFull(),
+                                ])
+                                ->createItemButtonLabel('Add Sponsor')
+                                ->columns(2),
+                        ]),
+                    Forms\Components\Wizard\Step::make('Important Dates')
+                        ->schema([
+                            Forms\Components\Repeater::make('important_dates')
+                                ->relationship('important_dates')
+                                ->schema([
+                                    Forms\Components\TextInput::make('title')
+                                        ->required()
+                                        ->columnSpanFull(),
+                                    Forms\Components\DatePicker::make('date')
+                                        ->required()
+                                        ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('description')
+                                        ->nullable()
+                                        ->columnSpanFull(),
+                                ])
+                                ->createItemButtonLabel('Add Important Date')
                                 ->columns(2),
                         ]),
                 ])

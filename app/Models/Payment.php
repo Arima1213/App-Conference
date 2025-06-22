@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
+        'seminar_fee_id',
         'participant_id',
         'invoice_code',
         'amount',
@@ -24,5 +25,10 @@ class Payment extends Model
     public function participant()
     {
         return $this->belongsTo(Participant::class);
+    }
+
+    public function seminarFee()
+    {
+        return $this->belongsTo(SeminarFee::class, 'seminar_fee_id');
     }
 }

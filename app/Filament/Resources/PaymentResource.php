@@ -23,6 +23,9 @@ class PaymentResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('seminar_fee_id')
+                    ->relationship('seminarFee', 'name')
+                    ->required(),
                 Forms\Components\Select::make('participant_id')
                     ->relationship('participant', 'name')
                     ->required(),
@@ -53,16 +56,19 @@ class PaymentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
+                Tables\Columns\TextColumn::make('seminarFee.name')->label('Seminar Fee')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('participant.name')->label('Participant')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('invoice_code')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('amount')->money('IDR', true)->sortable(),
                 Tables\Columns\TextColumn::make('paid_at')->dateTime()->sortable(),
-                Tables\Columns\BadgeColumn::make('payment_status')
-                    ->enum([
-                        'pending' => 'Pending',
-                        'paid' => 'Paid',
-                        'failed' => 'Failed',
-                    ])
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->label('Payment Status')
+                    ->badge(true)
+                    // ->enum([
+                    //     'pending' => 'Pending',
+                    //     'paid' => 'Paid',
+                    //     'failed' => 'Failed',
+                    // ])
                     ->colors([
                         'primary' => 'pending',
                         'success' => 'paid',

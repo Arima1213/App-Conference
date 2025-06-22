@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('important_dates', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
             $table->string('title'); // e.g., Submission Deadline
             $table->date('date');
             $table->string('description')->nullable(); // e.g., "Last date to submit papers"

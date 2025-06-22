@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            // foreign key to seminar fee
+            $table->foreignId('seminar_fee_id')->constrained('seminar_fees')->onDelete('cascade');
             $table->foreignId('participant_id')->constrained('participants')->onDelete('cascade');
             $table->string('invoice_code')->unique();
             $table->decimal('amount', 12, 2);
