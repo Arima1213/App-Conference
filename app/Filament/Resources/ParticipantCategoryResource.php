@@ -23,7 +23,10 @@ class ParticipantCategoryResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('Name')
+                    ->required()
+                    ->unique(ignoreRecord: true),
             ]);
     }
 
@@ -31,7 +34,12 @@ class ParticipantCategoryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime('Y-m-d H:i')
+                    ->sortable(),
             ])
             ->filters([
                 //
