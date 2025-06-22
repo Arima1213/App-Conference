@@ -18,47 +18,85 @@ class SponsorResource extends Resource
 {
     protected static ?string $model = Sponsor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-sponsor';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\FileUpload::make('logo')
-                    ->image()
-                    ->directory('sponsor-logos')
-                    ->nullable(),
-                Forms\Components\TextInput::make('website')
-                    ->url()
-                    ->maxLength(255)
-                    ->nullable(),
-            ]);
+        return $form->schema([
+            Forms\Components\TextInput::make('name')
+                ->label('Sponsor Name')
+                ->required()
+                ->maxLength(255)
+                ->placeholder('Enter sponsor name')
+                ->autofocus(),
+
+            Forms\Components\FileUpload::make('logo')
+                ->label('Logo')
+                ->image()
+                ->directory('sponsor-logos')
+                ->imagePreviewHeight('100')
+                ->maxSize(2048)
+                ->hint('Recommended size: 300x300px')
+                ->nullable(),
+
+            Forms\Components\TextInput::make('website')
+                ->label('Website URL')
+                ->url()
+                ->maxLength(255)
+                ->placeholder('https://example.com')
+                ->nullable(),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\ImageColumn::make('logo')->disk('public')->label('Logo'),
-                Tables\Columns\TextColumn::make('website')->label('Website')->limit(30),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Created At')->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Sponsor Name')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(30),
+
+                Tables\Columns\ImageColumn::make('logo')
+                    ->label('Logo')
+                    ->disk('public')
+                    ->circular(),
+
+                Tables\Columns\TextColumn::make('website')
+                    ->label('Website')
+                    ->url(fn($record) => $record->website)
+                    ->limit(40)
+                    ->copyable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime('M d, Y H:i')
+                    ->sortable(),
             ])
             ->filters([
-                //
+                // Add filters here if needed
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                DeleteAction::make()->label('Delete')->icon('heroicon-o-trash'),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil'),
+
+                DeleteAction::make()
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Delete Selected')
+                        ->color('danger')
+                        ->requiresConfirmation(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

@@ -99,17 +99,13 @@ class ParticipantResource extends Resource
                 Tables\Columns\TextColumn::make('qrcode')
                     ->label('QR Code')
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('status')
+                Tables\Columns\TextColumn::make('status')
                     ->label('Status')
+                    ->badge()
                     ->colors([
                         'secondary' => 'unverified',
                         'success' => 'verified',
                         'primary' => 'arrived',
-                    ])
-                    ->enum([
-                        'unverified' => 'Unverified',
-                        'verified' => 'Verified',
-                        'arrived' => 'Arrived',
                     ])
                     ->sortable(),
                 Tables\Columns\IconColumn::make('seminar_kit_status')

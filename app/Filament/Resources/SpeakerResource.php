@@ -17,7 +17,7 @@ class SpeakerResource extends Resource
 {
     protected static ?string $model = Speaker::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -66,36 +66,54 @@ class SpeakerResource extends Resource
                     ->label('Photo')
                     ->disk('public')
                     ->circular()
-                    ->size(36),
+                    ->size(40)
+                    ->tooltip(fn($record) => $record->name),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label('Full Name')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('position')
-                    ->label('Position')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->limit(30)
+                    ->description(fn($record) => $record->position),
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Position / Title')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->limit(30),
                 Tables\Columns\IconColumn::make('is_keynote')
-                    ->label('Keynote')
+                    ->label('Keynote Speaker')
                     ->boolean()
                     ->trueIcon('heroicon-o-star')
-                    ->falseIcon('heroicon-o-minus'),
+                    ->falseIcon('heroicon-o-minus')
+                    ->color(fn($state) => $state ? 'warning' : 'gray'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime('M d, Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_keynote')
                     ->label('Keynote Speaker')
                     ->trueLabel('Yes')
-                    ->falseLabel('No'),
+                    ->falseLabel('No')
+                    ->placeholder('All'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('View')
+                    ->icon('heroicon-o-eye'),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Delete Selected')
+                        ->icon('heroicon-o-trash'),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
