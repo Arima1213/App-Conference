@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class ConferenceResource extends Resource
 {
@@ -169,50 +170,82 @@ class ConferenceResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Title')
+                    ->label('Conference Title')
                     ->searchable()
                     ->sortable()
-                    ->limit(30),
-                Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
-                    ->limit(50)
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('schedules_count')
-                    ->counts('schedules')
+                    ->limit(40)
+                    ->description(fn($record) => $record->description ? Str::limit($record->description, 60) : null),
+                Tables\Columns\TextColumn::make('schedules')
                     ->label('Schedules')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('venues_count')
-                    ->counts('venues')
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->schedules->map(function ($schedule) {
+                            $start = $schedule->start_time ? \Carbon\Carbon::parse($schedule->start_time)->format('Y-m-d H:i') : '-';
+                            $end = $schedule->end_time ? \Carbon\Carbon::parse($schedule->end_time)->format('Y-m-d H:i') : '-';
+                            return "{$schedule->title}<br><small>{$start} - {$end}</small>";
+                        })->implode('<br><br>');
+                    })
+                    ->html(),
+
+                Tables\Columns\TextColumn::make('venues')
                     ->label('Venues')
-                    ->sortable(),
+                    ->formatStateUsing(function ($record) {
+                        return $record->venues->map(function ($venue) {
+                            $name = \Illuminate\Support\Str::limit($venue->name, 25);
+                            $address = \Illuminate\Support\Str::limit($venue->address, 35);
+                            // Alamat di bawah nama, tanpa ikon
+                            return $name . '<br><small>' . $address . '</small>';
+                        })->implode('<br>');
+                    })
+                    ->html(),
+                Tables\Columns\TextColumn::make('sponsors')
+                    ->label('Sponsors')
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->sponsors->map(function ($sponsor) {
+                            $name = e($sponsor->name);
+                            if ($sponsor->website) {
+                                $name =  $name;
+                            }
+                            return "{$name}";
+                        })->implode('<br>');
+                    })
+                    ->html(),
+                Tables\Columns\TextColumn::make('importantDates_count')
+                    ->counts('importantDates')
+                    ->label('Important Dates')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label('Created At')
                     ->dateTime('Y-m-d H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Updated')
+                    ->label('Updated At')
                     ->dateTime('Y-m-d H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Active'),
+                    ->label('Active Status'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('Details'),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Delete Selected'),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
