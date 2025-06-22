@@ -11,5 +11,6 @@ class Speaker extends Model
         'position',
         'bio',
         'photo',
+        'is_keynote',
     ];
 }

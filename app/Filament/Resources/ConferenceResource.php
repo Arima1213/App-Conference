@@ -59,7 +59,20 @@ class ConferenceResource extends Resource
                                         ->relationship('speaker', 'name')
                                         ->required()
                                         ->columnSpanFull()
-                                        ->label('Speaker'),
+                                        ->label('Speaker')
+                                        ->getOptionLabelFromRecordUsing(function ($record) {
+                                            // Tampilkan ikon bintang jika is_keynote = true
+                                            return $record->name . ($record->is_keynote ? ' ⭐' : '');
+                                        })
+                                        ->extraAttributes([
+                                            'x-data' => '{}',
+                                        ])
+                                        ->hintAction(
+                                            fn() => Forms\Components\Actions\Action::make('addSpeaker')
+                                                ->label('Tambah Speaker')
+                                                ->url('/manage/speakers/create')
+                                                ->openUrlInNewTab()
+                                        ),
                                     Forms\Components\DateTimePicker::make('start_time')
                                         ->required()
                                         ->label('Start Date & Time')

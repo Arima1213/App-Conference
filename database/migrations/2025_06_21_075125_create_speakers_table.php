@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('position')->nullable(); // e.g. Business Manager
             $table->text('bio')->nullable();        // optional, jika ingin detail
             $table->string('photo')->nullable();    // path ke foto pembicara
+            // apakah keynote atau tidak
+            $table->boolean('is_keynote')->default(false);
             $table->timestamps();
         });
     }
