@@ -9,19 +9,17 @@ class Conference extends Model
     protected $fillable = [
         'title',
         'description',
-        'schedule_id',
-        'venue_id',
         'banner',
         'is_active',
     ];
 
     public function schedule()
     {
-        return $this->belongsTo(Schedule::class);
+        return $this->hasMany(Schedule::class);
     }
 
     public function venue()
     {
-        return $this->belongsTo(venue::class);
+        return $this->hasMany(Venue::class);
     }
 }

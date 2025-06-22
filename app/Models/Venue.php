@@ -8,12 +8,13 @@ class Venue extends Model
 {
     protected $fillable = [
         'name',
+        'conference_id',
         'address',
         'map_url',
     ];
 
-    public function conferences()
+    public function conference()
     {
-        return $this->hasMany(Conference::class);
+        return $this->belongsTo(Conference::class);
     }
 }

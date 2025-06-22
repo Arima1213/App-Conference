@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('venues', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
             $table->text('address')->nullable();
             $table->text('map_url')->nullable(); // embed Google Maps
             $table->timestamps();

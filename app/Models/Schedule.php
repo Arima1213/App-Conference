@@ -8,6 +8,7 @@ class Schedule extends Model
 {
     protected $fillable = [
         'speaker_id',
+        'conference_id',
         'start_time',
         'end_time',
         'title',
@@ -20,8 +21,8 @@ class Schedule extends Model
         return $this->belongsTo(Speaker::class);
     }
 
-    public function conferences()
+    public function conference()
     {
-        return $this->hasMany(Conference::class);
+        return $this->belongsTo(Conference::class);
     }
 }

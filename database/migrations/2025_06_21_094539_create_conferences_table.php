@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->foreignId('schedule_id')->constrained('schedules')->onDelete('cascade');
-            $table->foreignId('venue_id')->nullable()->constrained('venues')->nullOnDelete();
             $table->string('banner')->nullable(); // path ke gambar banner
             $table->boolean('is_active')->default(true); // default konferensi aktif
             $table->timestamps();
