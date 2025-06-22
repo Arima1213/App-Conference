@@ -37,15 +37,31 @@ class ConferenceResource extends Resource
                         ]),
                     Forms\Components\Wizard\Step::make('Jadwal & Tempat')
                         ->schema([
-                            Forms\Components\Select::make('schedule_id')
-                                ->options(\App\Models\Schedule::pluck('title', 'id'))
-                                ->required()
-                                ->columnSpan(2),
-                            Forms\Components\Select::make('venue_id')
-                                ->options(\App\Models\Venue::pluck('name', 'id'))
-                                ->searchable()
-                                ->nullable()
-                                ->columnSpan(2),
+                            Forms\Components\Repeater::make('schedules')
+                                ->relationship('schedules') // penting agar otomatis tersimpan
+                                ->schema([
+                                    Forms\Components\Select::make('speaker_id')
+                                        ->relationship('speaker', 'name')
+                                        ->required()
+                                        ->label('Speaker'),
+                                    Forms\Components\TimePicker::make('start_time')->required(),
+                                    Forms\Components\TimePicker::make('end_time')->required(),
+                                    Forms\Components\TextInput::make('title')->required(),
+                                    Forms\Components\TextInput::make('subtitle')->nullable(),
+                                    Forms\Components\Textarea::make('description')->nullable()->rows(2),
+                                ])
+                                ->createItemButtonLabel('Tambah Jadwal')
+                                ->columns(2),
+
+                            Forms\Components\Repeater::make('venues')
+                                ->relationship('venues') // relasi otomatis
+                                ->schema([
+                                    Forms\Components\TextInput::make('name')->required(),
+                                    Forms\Components\TextInput::make('address')->required(),
+                                    Forms\Components\TextInput::make('map_url')->url()->nullable(),
+                                ])
+                                ->createItemButtonLabel('Tambah Lokasi')
+                                ->columns(2),
                         ]),
                     Forms\Components\Wizard\Step::make('Banner & Status')
                         ->schema([
