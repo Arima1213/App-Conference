@@ -23,7 +23,17 @@ class KeynoteSpeakerResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('institution')
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('bio')
+                    ->maxLength(65535),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->directory('keynote-speakers/photos')
+                    ->maxSize(2048),
             ]);
     }
 
@@ -31,7 +41,23 @@ class KeynoteSpeakerResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\ImageColumn::make('photo')
+                    ->label('Photo')
+                    ->circular()
+                    ->size(40),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('institution')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('bio')
+                    ->limit(50)
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d M Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
