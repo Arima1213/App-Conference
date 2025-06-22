@@ -24,18 +24,21 @@ class ScheduleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('speaker_id')
-                    ->relationship('speaker', 'name')
-                    ->required(),
+                    ->options(\App\Models\Speaker::pluck('name', 'id'))
+                    ->required()
+                    ->searchable(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('subtitle')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->nullable(),
                 Forms\Components\Textarea::make('description')
-                    ->maxLength(65535),
-                Forms\Components\DateTimePicker::make('start_time')
+                    ->maxLength(65535)
+                    ->nullable(),
+                Forms\Components\TimePicker::make('start_time')
                     ->required(),
-                Forms\Components\DateTimePicker::make('end_time')
+                Forms\Components\TimePicker::make('end_time')
                     ->required(),
             ]);
     }
@@ -44,14 +47,25 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('subtitle')->limit(30),
-                Tables\Columns\TextColumn::make('speaker.name')->label('Speaker')->sortable(),
-                Tables\Columns\TextColumn::make('start_time')->dateTime()->sortable(),
-                Tables\Columns\TextColumn::make('end_time')->dateTime()->sortable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('subtitle')
+                    ->limit(30)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('speaker.name')
+                    ->label('Speaker')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('start_time')
+                    ->time()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('end_time')
+                    ->time()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                // Add filters if needed
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

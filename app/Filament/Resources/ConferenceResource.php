@@ -23,27 +23,56 @@ class ConferenceResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->rows(4)
-                    ->maxLength(65535),
-                Forms\Components\Select::make('schedule_id')
-                    ->relationship('schedule', 'name')
-                    ->required(),
-                Forms\Components\Select::make('venue_id')
-                    ->relationship('venue', 'name')
-                    ->searchable()
-                    ->nullable(),
-                Forms\Components\FileUpload::make('banner')
-                    ->image()
-                    ->directory('conference-banners')
-                    ->maxSize(2048)
-                    ->nullable(),
-                Forms\Components\Toggle::make('is_active')
-                    ->label('Active')
-                    ->default(true),
+                Forms\Components\Wizard::make([
+                    Forms\Components\Wizard\Step::make('Informasi')
+                        ->schema([
+                            Forms\Components\TextInput::make('title')
+                                ->required()
+                                ->maxLength(255)
+                                ->columnSpan(2),
+                            Forms\Components\Textarea::make('description')
+                                ->rows(4)
+                                ->maxLength(65535)
+                                ->columnSpan(2),
+                        ]),
+                    Forms\Components\Wizard\Step::make('Jadwal & Tempat')
+                        ->schema([
+                            Forms\Components\Select::make('schedule_id')
+                                ->options(\App\Models\Schedule::pluck('title', 'id'))
+                                ->required()
+                                ->columnSpan(2),
+                            Forms\Components\Select::make('venue_id')
+                                ->options(\App\Models\Venue::pluck('name', 'id'))
+                                ->searchable()
+                                ->nullable()
+                                ->columnSpan(2),
+                        ]),
+                    Forms\Components\Wizard\Step::make('Banner & Status')
+                        ->schema([
+                            Forms\Components\FileUpload::make('banner')
+                                ->image()
+                                ->directory('conference-banners')
+                                ->maxSize(2048)
+                                ->nullable()
+                                ->columnSpan(2),
+                            Forms\Components\Toggle::make('is_active')
+                                ->label('Active')
+                                ->default(true)
+                                ->columnSpan(2),
+                        ]),
+                ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->submitAction(new \Illuminate\Support\HtmlString(\Illuminate\Support\Facades\Blade::render(
+                        <<<'BLADE'
+                    <x-filament::button
+                        type="submit"
+                        size="sm"
+                    >
+                        Submit
+                    </x-filament::button>
+            BLADE
+                    )))
             ]);
     }
 
