@@ -16,42 +16,61 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ParticipantResource extends Resource
 {
     protected static ?string $model = Participant::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    // logo icon participant
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->label('User')
                     ->relationship('user', 'name')
-                    ->required(),
+                    ->searchable()
+                    ->required()
+                    ->placeholder('Select a user'),
                 Forms\Components\TextInput::make('nik')
-                    ->maxLength(255),
+                    ->label('NIK')
+                    ->maxLength(255)
+                    ->placeholder('Enter National Identification Number'),
                 Forms\Components\TextInput::make('university')
-                    ->maxLength(255),
+                    ->label('University')
+                    ->maxLength(255)
+                    ->placeholder('Enter university name'),
                 Forms\Components\TextInput::make('phone')
+                    ->label('Phone Number')
                     ->tel()
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->placeholder('Enter phone number'),
                 Forms\Components\TextInput::make('participant_code')
+                    ->label('Participant Code')
                     ->required()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->placeholder('Enter unique participant code'),
                 Forms\Components\TextInput::make('paper_title')
-                    ->maxLength(255),
+                    ->label('Paper Title')
+                    ->maxLength(255)
+                    ->placeholder('Enter paper title (if any)'),
                 Forms\Components\TextInput::make('qrcode')
-                    ->maxLength(255),
+                    ->label('QR Code')
+                    ->maxLength(255)
+                    ->placeholder('Enter QR code'),
                 Forms\Components\Select::make('status')
+                    ->label('Status')
                     ->required()
                     ->options([
                         'unverified' => 'Unverified',
                         'verified' => 'Verified',
                         'arrived' => 'Arrived',
-                    ]),
+                    ])
+                    ->default('unverified'),
                 Forms\Components\Toggle::make('seminar_kit_status')
+                    ->label('Seminar Kit Received')
                     ->required(),
-            ]);
+            ])
+            ->columns(2);
     }
 
     public static function table(Table $table): Table
@@ -63,37 +82,54 @@ class ParticipantResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nik')
+                    ->label('NIK')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('university')
+                    ->label('University')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label('Phone Number')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('participant_code')
+                    ->label('Participant Code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('paper_title')
+                    ->label('Paper Title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('qrcode')
+                    ->label('QR Code')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
+                Tables\Columns\BadgeColumn::make('status')
+                    ->label('Status')
                     ->colors([
                         'secondary' => 'unverified',
                         'success' => 'verified',
                         'primary' => 'arrived',
-                    ]),
+                    ])
+                    ->enum([
+                        'unverified' => 'Unverified',
+                        'verified' => 'Verified',
+                        'arrived' => 'Arrived',
+                    ])
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('seminar_kit_status')
-                    ->boolean(),
+                    ->label('Seminar Kit Received')
+                    ->boolean()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Created At')
+                    ->dateTime('Y-m-d H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Updated At')
+                    ->dateTime('Y-m-d H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
                     ->options([
                         'unverified' => 'Unverified',
                         'verified' => 'Verified',
@@ -101,13 +137,16 @@ class ParticipantResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

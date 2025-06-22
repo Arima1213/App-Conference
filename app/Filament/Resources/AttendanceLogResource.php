@@ -17,49 +17,69 @@ class AttendanceLogResource extends Resource
 {
     protected static ?string $model = AttendanceLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard';
 
+    /**
+     * Define the form schema for creating and editing AttendanceLog records.
+     *
+     * @param Form $form
+     * @return Form
+     */
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('participant_id')
-                    ->label('Participant')
-                    ->relationship('participant', 'name')
-                    ->searchable()
-                    ->required(),
+        return $form->schema([
+            Forms\Components\Select::make('participant_id')
+                ->label('Participant')
+                ->relationship('participant', 'name')
+                ->searchable()
+                ->required()
+                ->preload(),
 
-                Forms\Components\Select::make('conference_id')
-                    ->label('Conference')
-                    ->relationship('conference', 'name')
-                    ->searchable()
-                    ->required(),
+            Forms\Components\Select::make('conference_id')
+                ->label('Conference')
+                ->relationship('conference', 'name')
+                ->searchable()
+                ->required()
+                ->preload(),
 
-                Forms\Components\Select::make('scanned_by')
-                    ->label('Scanned By')
-                    ->relationship('scannedBy', 'name')
-                    ->searchable()
-                    ->required(),
+            Forms\Components\Select::make('scanned_by')
+                ->label('Scanned By')
+                ->relationship('scannedBy', 'name')
+                ->searchable()
+                ->required()
+                ->preload(),
 
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'present' => 'Present',
-                        'not_present' => 'Not Present',
-                    ])
-                    ->required()
-                    ->default('present'),
+            Forms\Components\Select::make('status')
+                ->label('Status')
+                ->options([
+                    'present' => 'Present',
+                    'not_present' => 'Not Present',
+                ])
+                ->required()
+                ->default('present'),
 
-                Forms\Components\DateTimePicker::make('scanned_at')
-                    ->label('Scanned At')
-                    ->required(),
-            ]);
+            Forms\Components\DateTimePicker::make('scanned_at')
+                ->label('Scanned At')
+                ->required()
+                ->displayFormat('Y-m-d H:i:s')
+                ->seconds(false),
+        ]);
     }
 
+    /**
+     * Define the table schema for displaying AttendanceLog records.
+     *
+     * @param Table $table
+     * @return Table
+     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('participant.name')
                     ->label('Participant')
@@ -76,11 +96,8 @@ class AttendanceLogResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\BadgeColumn::make('status')
-                    ->enum([
-                        'present' => 'Present',
-                        'not_present' => 'Not Present',
-                    ])
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
                     ->colors([
                         'success' => 'present',
                         'danger' => 'not_present',
@@ -89,32 +106,43 @@ class AttendanceLogResource extends Resource
 
                 Tables\Columns\TextColumn::make('scanned_at')
                     ->label('Scanned At')
-                    ->dateTime()
+                    ->dateTime('Y-m-d H:i')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
-                    ->dateTime()
-                    ->sortable(),
+                    ->dateTime('Y-m-d H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
                     ->options([
                         'present' => 'Present',
                         'not_present' => 'Not Present',
                     ]),
+
                 Tables\Filters\SelectFilter::make('conference_id')
                     ->label('Conference')
-                    ->relationship('conference', 'name'),
+                    ->relationship('conference', 'name')
+                    ->searchable(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('View Details'),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Delete'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Delete Selected'),
                 ]),
-            ]);
+            ])
+            ->defaultSort('scanned_at', 'desc');
     }
 
     public static function getRelations(): array
