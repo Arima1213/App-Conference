@@ -32,4 +32,9 @@ class Conference extends Model
     {
         return $this->hasMany(SeminarFee::class);
     }
+
+    public function importantDates()
+    {
+        return $this->hasMany(ImportantDate::class);
+    }
 }

@@ -115,8 +115,8 @@ class ConferenceResource extends Resource
                         ]),
                     Forms\Components\Wizard\Step::make('Important Dates')
                         ->schema([
-                            Forms\Components\Repeater::make('important_dates')
-                                ->relationship('important_dates')
+                            Forms\Components\Repeater::make('importantDates')
+                                ->relationship('importantDates')
                                 ->schema([
                                     Forms\Components\TextInput::make('title')
                                         ->required()
@@ -134,8 +134,11 @@ class ConferenceResource extends Resource
                 ])
                     ->columns(2)
                     ->columnSpanFull()
-                    ->submitAction(new \Illuminate\Support\HtmlString(\Illuminate\Support\Facades\Blade::render(
-                        <<<'BLADE'
+                    ->submitAction(
+                        request()->routeIs('filament.admin.resources.conferences.view')
+                            ? null
+                            : new \Illuminate\Support\HtmlString(\Illuminate\Support\Facades\Blade::render(
+                                <<<'BLADE'
                     <x-filament::button
                         type="submit"
                         size="sm"
@@ -143,7 +146,8 @@ class ConferenceResource extends Resource
                         Submit
                     </x-filament::button>
             BLADE
-                    )))
+                            ))
+                    )
             ]);
     }
 
