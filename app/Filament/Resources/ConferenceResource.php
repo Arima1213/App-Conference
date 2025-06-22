@@ -83,11 +83,11 @@ class ConferenceResource extends Resource
                                 ->directory('conference-banners')
                                 ->maxSize(2048)
                                 ->nullable()
-                                ->columnSpan(2),
+                                ->columnSpanFull(),
                             Forms\Components\Toggle::make('is_active')
                                 ->label('Active')
                                 ->default(true)
-                                ->columnSpan(2),
+                                ->columnSpanFull(),
                         ]),
                 ])
                     ->columns(2)
