@@ -23,7 +23,29 @@ class AttendanceLogResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Select::make('participant_id')
+                    ->label('Participant')
+                    ->relationship('participant', 'name')
+                    ->searchable()
+                    ->required(),
+
+                Forms\Components\Select::make('scanned_by')
+                    ->label('Scanned By')
+                    ->relationship('scannedBy', 'name')
+                    ->searchable()
+                    ->required(),
+
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'present' => 'Present',
+                        'not_present' => 'Not Present',
+                    ])
+                    ->required()
+                    ->default('present'),
+
+                Forms\Components\DateTimePicker::make('scanned_at')
+                    ->label('Scanned At')
+                    ->required(),
             ]);
     }
 
@@ -31,10 +53,45 @@ class AttendanceLogResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('id')->sortable(),
+
+                Tables\Columns\TextColumn::make('participant.name')
+                    ->label('Participant')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('scannedBy.name')
+                    ->label('Scanned By')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\BadgeColumn::make('status')
+                    ->enum([
+                        'present' => 'Present',
+                        'not_present' => 'Not Present',
+                    ])
+                    ->colors([
+                        'success' => 'present',
+                        'danger' => 'not_present',
+                    ])
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('scanned_at')
+                    ->label('Scanned At')
+                    ->dateTime()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'present' => 'Present',
+                        'not_present' => 'Not Present',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
