@@ -112,29 +112,41 @@ class ConferenceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('schedule.name')
-                    ->label('Schedule')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('venue.name')
-                    ->label('Venue')
-                    ->sortable(),
                 Tables\Columns\ImageColumn::make('banner')
                     ->label('Banner')
                     ->disk('public')
-                    ->circular(),
+                    ->circular()
+                    ->height(48)
+                    ->width(48),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Title')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(30),
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Description')
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('schedules_count')
+                    ->counts('schedules')
+                    ->label('Schedules')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('venues_count')
+                    ->counts('venues')
+                    ->label('Venues')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Created')
+                    ->dateTime('Y-m-d H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Updated')
+                    ->dateTime('Y-m-d H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -143,6 +155,7 @@ class ConferenceResource extends Resource
                     ->label('Active'),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
