@@ -7,7 +7,10 @@
 	<div class="container">
 		<div class="row conference-header-row">
 			<div class="col-sm-3 col-lg-2 col-xl-3">
-				<a href="index-2.html" class="logo"><img src="assets/img/logo-white.svg" alt="logo"></a>
+				<a href="{{ asset('assets/img/logo-white.svg') }}" class="logo">
+					<img src="{{ asset('assets/img/logo-white.svg') }}"
+						alt="Conference app logo in white, stylized text on a dark background, modern and professional tone">
+				</a>
 			</div>
 			<div class="col-sm-9 col-lg-8 col-xl-6">
 				<nav class="nav-menu menu">
