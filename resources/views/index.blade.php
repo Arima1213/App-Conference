@@ -28,6 +28,10 @@
 	@include('utils.counter')
 	<!-- ========= S-CONFERENCE-COUNTER END ========= -->
 
+	<!-- ============ S-KEYNOTE-SPEAKER ============ -->
+	@include('utils.keynoteSpeaker')
+	<!-- ========== S-KEYNOTE-SPEAKER END ========== -->
+
 	<!-- ============ SPEAKER & SCHEDULE ============ -->
 	@include('utils.speakerSchedule')
 	<!-- ========== SPEAKER & SCHEDULE END ========== -->
