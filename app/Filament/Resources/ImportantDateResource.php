@@ -23,7 +23,18 @@ class ImportantDateResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('title')
+                    ->label('Title')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\DatePicker::make('date')
+                    ->label('Date')
+                    ->required(),
+
+                Forms\Components\Textarea::make('description')
+                    ->label('Description')
+                    ->maxLength(255),
             ]);
     }
 
@@ -31,17 +42,39 @@ class ImportantDateResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Title')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Date')
+                    ->date()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Description')
+                    ->limit(50)
+                    ->wrap(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->dateTime('Y-m-d H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
