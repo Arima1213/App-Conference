@@ -1,6 +1,6 @@
 <section class="s-our-speaker team-our-speaker">
-	<div class="container">
-		<h2 class="title-conference"><span>Our Speaker</span></h2>
+	<div class="container mt-5 pt-5">
+		<h2 class="title-conference"><span>Keynote Speaker</span></h2>
 		<div class="slider-our-speaker">
 			<div class="slide-our-speaker">
 				<div class="our-speaker-item">
