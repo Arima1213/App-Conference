@@ -40,15 +40,22 @@ class ConferenceResource extends Resource
                             Forms\Components\Repeater::make('schedules')
                                 ->relationship('schedules') // penting agar otomatis tersimpan
                                 ->schema([
+                                    Forms\Components\TextInput::make('title')
+                                        ->columnSpanFull()
+                                        ->required(),
+                                    Forms\Components\TextInput::make('subtitle')
+                                        ->columnSpanFull()
+                                        ->nullable(),
+                                    Forms\Components\Textarea::make('description')
+                                        ->columnSpanFull()
+                                        ->nullable()->rows(2),
                                     Forms\Components\Select::make('speaker_id')
                                         ->relationship('speaker', 'name')
                                         ->required()
+                                        ->columnSpanFull()
                                         ->label('Speaker'),
                                     Forms\Components\TimePicker::make('start_time')->required(),
                                     Forms\Components\TimePicker::make('end_time')->required(),
-                                    Forms\Components\TextInput::make('title')->required(),
-                                    Forms\Components\TextInput::make('subtitle')->nullable(),
-                                    Forms\Components\Textarea::make('description')->nullable()->rows(2),
                                 ])
                                 ->createItemButtonLabel('Tambah Jadwal')
                                 ->columns(2),
