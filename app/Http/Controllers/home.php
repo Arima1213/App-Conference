@@ -15,53 +15,48 @@ class home extends Controller
      */
     public function index()
     {
-        // Ambil conference aktif yang memiliki jadwal mendatang
         $conference = Conference::where('is_active', true)
-            ->whereHas('schedules', function ($query) {
-                $query->where('start_time', '>=', now());
-            })
-            ->with(['schedules' => function ($query) {
-                $query->where('start_time', '>=', now())
-                    ->orderBy('start_time', 'asc');
-            }])
+            ->whereHas('schedules', fn($q) => $q->where('start_time', '>=', now()))
+            ->with([
+                'schedules' => fn($q) => $q->where('start_time', '>=', now())->orderBy('start_time', 'asc'),
+                'seminarFees',
+            ])
             ->get()
-            ->sortBy(function ($conf) {
-                return optional($conf->schedules->first())->start_time;
-            })
+            ->sortBy(fn($conf) => optional($conf->schedules->first())->start_time)
             ->first();
 
-        // Jika tidak ada conference mendatang, ambil conference aktif terakhir
         if (!$conference) {
             $conference = Conference::where('is_active', true)
                 ->whereHas('schedules')
                 ->with([
-                    'schedules' => function ($query) {
-                        $query->orderBy('start_time', 'desc');
-                    },
-                    'venues'
+                    'schedules' => fn($q) => $q->orderBy('start_time', 'desc'),
+                    'seminarFees',
+                    'venues',
                 ])
                 ->get()
-                ->sortByDesc(function ($conf) {
-                    return optional($conf->schedules->first())->start_time;
-                })
+                ->sortByDesc(fn($conf) => optional($conf->schedules->first())->start_time)
                 ->first();
         }
 
         $conferences = $conference ? [$conference] : [];
 
-        // Ambil waktu countdown dari jadwal terdekat (jika ada)
         $countdownTime = $conference && $conference->schedules->first()
             ? $conference->schedules->first()->start_time
             : null;
 
-        // Ambil keynote speaker
         $speakers = Speaker::all();
 
-        return view('index', [
-            'conference'      => $conference,
-            'conferences'     => $conferences,
-            'countdownTime'   => $countdownTime,
-            'speakers' => $speakers,
-        ]);
+        // pisahkan biaya nasional dan internasional
+        $nationalFees = $conference?->seminarFees->where('type', 'national') ?? collect();
+        $internationalFees = $conference?->seminarFees->where('type', 'international') ?? collect();
+
+        return view('index', compact(
+            'conference',
+            'conferences',
+            'countdownTime',
+            'speakers',
+            'nationalFees',
+            'internationalFees',
+        ));
     }
 }

@@ -1,62 +1,69 @@
-<section class="s-pricing-table">
+<section class="s-pricing-table mt-5">
 	<div class="container">
-		<h2 class="title-conference"><span>Pricing table</span></h2>
-		<div class="row pricing-table-cover">
-			<div class="col-md-4 pricing-table-col">
-				<div class="pricing-table-item">
-					<h3>Basic</h3>
-					<div class="price-cover">
-						<span>$</span>
-						<div class="price">130</div>
-						<img src="assets/img/tringle-price-yellow.svg" alt="img">
-					</div>
-					<div class="name">one day</div>
-					<div class="price-text">Active Event</div>
-					<ul class="price-list">
-						<li><i class="fas fa-check"></i>Ut enim ad minim</li>
-						<li><i class="fas fa-check"></i>veniam, quis nostrud</li>
-						<li><i class="fas fa-check"></i>exercitation ullamco</li>
-					</ul>
-					<a href="#" class="btn btn-yellow">buy ticket</a>
-				</div>
+		<div class="row">
+			<!-- INTERNATIONAL -->
+			<div class="col-md-6 text-center">
+				<h3 class="mb-3"><strong>INTERNATIONAL PARTICIPANT</strong></h3>
+				<table class="table-bordered mx-auto table text-center" style="width: auto;">
+					<thead class="thead-light">
+						<tr>
+							<th rowspan="2" class="align-middle">Category of Participants</th>
+							<th colspan="2">International Participant (USD)</th>
+						</tr>
+						<tr>
+							<th>Early Bird</th>
+							<th>Regular</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach ($internationalFees as $fee)
+							<tr>
+								<td>{{ $fee->category }}</td>
+								<td>{{ number_format($fee->early_bird_price, 0) }}</td>
+								<td>{{ number_format($fee->regular_price, 0) }}</td>
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
 			</div>
-			<div class="col-md-4 pricing-table-col premium">
-				<div class="pricing-table-item">
-					<h3>Premium</h3>
-					<div class="price-cover">
-						<span>$</span>
-						<div class="price">150</div>
-						<img src="assets/img/tringle-price-blue.svg" alt="img">
-					</div>
-					<div class="name">three day</div>
-					<div class="price-text">Active Event</div>
-					<ul class="price-list">
-						<li><i class="fas fa-check"></i>consectetur adipiscing</li>
-						<li><i class="fas fa-check"></i>elit, sed do eiusmod </li>
-						<li><i class="fas fa-check"></i>tempor incididunt</li>
-						<li><i class="fas fa-check"></i>ut labore et dolore</li>
-					</ul>
-					<a href="#" class="btn btn-yellow">buy ticket</a>
-				</div>
-			</div>
-			<div class="col-md-4 pricing-table-col">
-				<div class="pricing-table-item">
-					<h3>Ultimate</h3>
-					<div class="price-cover">
-						<span>$</span>
-						<div class="price">140</div>
-						<img src="assets/img/tringle-price-yellow2.svg" alt="img">
-					</div>
-					<div class="name">two day</div>
-					<div class="price-text">Active Event</div>
-					<ul class="price-list">
-						<li><i class="fas fa-check"></i>Duis aute irure dolor in</li>
-						<li><i class="fas fa-check"></i>reprehenderit in</li>
-						<li><i class="fas fa-check"></i>voluptate velit esse</li>
-					</ul>
-					<a href="#" class="btn btn-yellow">buy ticket</a>
-				</div>
+
+			<!-- NATIONAL -->
+			<div class="col-md-6 text-center">
+				<h3 class="mb-3"><strong>NATIONAL PARTICIPANT</strong></h3>
+				<table class="table-bordered mx-auto table text-center" style="width: auto;">
+					<thead class="thead-light">
+						<tr>
+							<th rowspan="2" class="align-middle">Category of Participants</th>
+							<th colspan="2">Indonesian Participant (IDR)</th>
+						</tr>
+						<tr>
+							<th>Early Bird</th>
+							<th>Regular</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach ($nationalFees as $fee)
+							<tr>
+								<td>{{ $fee->category }}</td>
+								<td>{{ number_format($fee->early_bird_price, 0, ',', '.') }}</td>
+								<td>{{ number_format($fee->regular_price, 0, ',', '.') }}</td>
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
 </section>
+<style>
+	.table-bordered {
+		border: 2px solid #000;
+	}
+
+	.table-bordered th,
+	.table-bordered td {
+		border: 1px solid #000;
+		padding: 0.75rem;
+		vertical-align: middle;
+	}
+</style>
