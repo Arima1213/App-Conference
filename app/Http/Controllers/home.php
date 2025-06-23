@@ -43,8 +43,6 @@ class home extends Controller
                 ->first();
         }
 
-        dd($conference);
-
         $conferences = $conference ? [$conference] : [];
 
         // Ambil waktu countdown dari jadwal terdekat (jika ada)

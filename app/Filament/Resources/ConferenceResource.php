@@ -57,6 +57,7 @@ class ConferenceResource extends Resource
                                 ->label('Schedules')
                                 ->columnSpanFull()
                                 ->schema([
+                                    Forms\Components\Hidden::make('id'),
                                     Forms\Components\TextInput::make('title')
                                         ->required()
                                         ->label('Schedule Title')
@@ -110,6 +111,7 @@ class ConferenceResource extends Resource
                                 ->label('Venues')
                                 ->columnSpanFull()
                                 ->schema([
+                                    Forms\Components\Hidden::make('id'),
                                     Forms\Components\TextInput::make('name')
                                         ->required()
                                         ->label('Venue Name')
@@ -138,6 +140,7 @@ class ConferenceResource extends Resource
                                 ->label('Sponsors')
                                 ->columnSpanFull()
                                 ->schema([
+                                    Forms\Components\Hidden::make('id'),
                                     Forms\Components\TextInput::make('name')
                                         ->required()
                                         ->label('Sponsor Name')
@@ -165,6 +168,7 @@ class ConferenceResource extends Resource
                         ]),
                     Forms\Components\Wizard\Step::make('Important Dates')
                         ->schema([
+                            Forms\Components\Hidden::make('id'),
                             Forms\Components\Repeater::make('importantDates')
                                 ->relationship('importantDates')
                                 ->label('Important Dates')
