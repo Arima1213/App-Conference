@@ -22,6 +22,7 @@ class home extends Controller
                 'schedules' => fn($q) => $q->where('start_time', '>=', now())->orderBy('start_time'),
                 'venues',
                 'seminarFees',
+                'sponsors',
             ])
             ->get()
             ->sortBy(fn($conf) => optional($conf->schedules->first())->start_time)
@@ -34,6 +35,7 @@ class home extends Controller
                     'schedules' => fn($q) => $q->orderBy('start_time', 'desc'),
                     'venues',
                     'seminarFees',
+                    'sponsors',
                 ])
                 ->get()
                 ->sortByDesc(fn($conf) => optional($conf->schedules->first())->start_time)
@@ -53,6 +55,8 @@ class home extends Controller
         $venue = $conference?->venues->first(); // hanya ambil satu venue utama untuk tampil
         $venueQuery = $venue ? urlencode($venue->name . ', ' . $venue->address) : null;
 
+        $sponsors = $conference?->sponsors ?? collect();
+
         return view('index', compact(
             'conference',
             'conferences',
@@ -61,6 +65,7 @@ class home extends Controller
             'nationalFees',
             'internationalFees',
             'venue',
+            'sponsors',
         ));
     }
 }
