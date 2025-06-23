@@ -37,4 +37,14 @@ class Conference extends Model
     {
         return $this->hasMany(ImportantDate::class);
     }
+
+    public function speakers()
+    {
+        return $this->hasMany(Speaker::class);
+    }
+
+    public function participants()
+    {
+        return $this->hasMany(Participant::class);
+    }
 }

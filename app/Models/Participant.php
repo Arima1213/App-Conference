@@ -8,6 +8,7 @@ class Participant extends Model
 {
     protected $fillable = [
         'user_id',
+        'conference_id',
         'nik',
         'university',
         'phone',
@@ -25,5 +26,10 @@ class Participant extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function conference()
+    {
+        return $this->belongsTo(Conference::class);
     }
 }

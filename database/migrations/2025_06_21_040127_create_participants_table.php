@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('participants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
             $table->string('nik')->nullable();
             $table->string('university')->nullable();
             $table->string('phone');
             $table->string('participant_code')->unique();
             $table->string('paper_title')->nullable();
-            $table->string('qrcode')->nullable(); // path ke file QR atau base64
+            $table->string('qrcode')->nullable();
             $table->enum('status', ['unverified', 'verified', 'arrived'])->default('unverified');
             $table->boolean('seminar_kit_status')->default(false);
             $table->timestamps();
