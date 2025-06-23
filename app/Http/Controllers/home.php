@@ -55,13 +55,13 @@ class home extends Controller
             : null;
 
         // Ambil keynote speaker
-        $keynoteSpeakers = Speaker::where('is_keynote', true)->get();
+        $speakers = Speaker::all();
 
         return view('index', [
             'conference'      => $conference,
             'conferences'     => $conferences,
             'countdownTime'   => $countdownTime,
-            'keynoteSpeakers' => $keynoteSpeakers,
+            'speakers' => $speakers,
         ]);
     }
 }
