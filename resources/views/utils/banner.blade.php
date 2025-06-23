@@ -4,7 +4,7 @@
 			@php
 				$schedule = $conference->schedules->first();
 				$date = $schedule ? \Carbon\Carbon::parse($schedule->start_time)->format('d M Y') : '-';
-				$background = $conference->banner ? 'storage/' . $conference->banner : 'assets/img/slide1-home-2.jpg';
+				$background = 'assets/img/slide1-home-2.jpg';
 			@endphp
 			<div class="conference-slide" style="background-image: url('{{ asset($background) }}');">
 				<img class="conference-slide-tringle" src="{{ asset('assets/img/effect-tringle-slider.svg') }}" alt="Triangle Effect">
