@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Filament\Participant\Resources\ConferenceBannerWidgetResource\Widgets;
+namespace App\Filament\Participant\Resources\RegisterConferenceeWidgetResource\Widgets;
 
 use App\Models\Conference;
 use Filament\Widgets\Widget;
+use Illuminate\Support\Facades\Crypt;
 
-class ConferenceBannerWidget extends Widget
+class RegisterConferenceeWidget extends Widget
 {
-    protected static string $view = 'filament.participant.resources.conference-banner-widget-resource.widgets.conference-banner-widget';
-
-    protected static ?int $sort = -1; // letakkan di atas jika perlu
-
-    protected int | string | array $columnSpan = 2; // lebar penuh
+    protected static string $view = 'filament.participant.resources.register-conferencee-widget-resource.widgets.register-conferencee-widget';
 
     public ?Conference $conference = null;
+    public ?string $encryptedConferenceId = null;
+    protected int | string | array $columnSpan = 2; // lebar penuh
+
 
     public function mount(): void
     {
@@ -23,6 +23,10 @@ class ConferenceBannerWidget extends Widget
             ->get()
             ->sortBy(fn($conf) => optional($conf->schedules->first())->start_time)
             ->first();
+
+        $this->encryptedConferenceId = $this->conference
+            ? Crypt::encryptString($this->conference->id)
+            : null;
     }
 
     public static function canView(): bool

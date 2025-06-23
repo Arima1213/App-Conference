@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Participant\Resources\ConferenceBannerWidgetResource\Widgets\ConferenceBannerWidget;
+use App\Filament\Participant\Resources\ParticipantProfileWidgetResource\Widgets\ParticipantProfileWidget;
+use App\Filament\Participant\Resources\RegisterConferenceeWidgetResource\Widgets\RegisterConferenceeWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -44,8 +47,8 @@ class ParticipantPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Participant/Widgets'), for: 'App\\Filament\\Participant\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                RegisterConferenceeWidget::class,
+                ParticipantProfileWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
