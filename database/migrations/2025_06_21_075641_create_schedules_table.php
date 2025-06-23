@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('speaker_id')->constrained('speakers')->onDelete('cascade');
             $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->string('title');        // Judul sesi, e.g., "Teamwork all you need"
             $table->string('subtitle')->nullable(); // Subjudul, e.g., "to know the manager"
             $table->text('description')->nullable(); // Deskripsi lengkap

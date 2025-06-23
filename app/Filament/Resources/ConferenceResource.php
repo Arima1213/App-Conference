@@ -93,12 +93,14 @@ class ConferenceResource extends Resource
                                         ->required()
                                         ->label('Start Date & Time')
                                         ->displayFormat('Y-m-d H:i')
-                                        ->native(false),
+                                        ->withoutSeconds()
+                                        ->default(null),
                                     Forms\Components\DateTimePicker::make('end_time')
                                         ->required()
                                         ->label('End Date & Time')
                                         ->displayFormat('Y-m-d H:i')
-                                        ->native(false),
+                                        ->withoutSeconds()
+                                        ->default(null),
                                 ])
                                 ->createItemButtonLabel('Add Schedule')
                                 ->columns(2)
@@ -111,25 +113,29 @@ class ConferenceResource extends Resource
                                 ->label('Venues')
                                 ->columnSpanFull()
                                 ->schema([
-                                    Forms\Components\Hidden::make('id'),
                                     Forms\Components\TextInput::make('name')
                                         ->required()
                                         ->label('Venue Name')
-                                        ->placeholder('Enter venue name')
                                         ->columnSpanFull(),
+
                                     Forms\Components\TextInput::make('address')
                                         ->required()
                                         ->label('Address')
+                                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                                            $encodedAddress = urlencode($state);
+                                            $embedUrl = "https://maps.google.com/maps?q={$encodedAddress}&output=embed";
+                                            $set('map_url', $embedUrl);
+                                        })
                                         ->placeholder('Enter venue address')
                                         ->columnSpanFull(),
+
                                     Forms\Components\TextInput::make('map_url')
-                                        ->nullable()
-                                        ->url()
-                                        ->label('Map URL')
-                                        ->placeholder('Paste Google Maps URL (optional)')
+                                        ->label('Google Maps Embed URL')
+                                        ->readOnly()
+                                        ->helperText('Auto-filled from address')
                                         ->columnSpanFull(),
                                 ])
-                                ->createItemButtonLabel('Add Venue')
+                                ->addActionLabel('Add Venue')
                                 ->columns(2)
                                 ->helperText('List all venues for this conference.'),
                         ]),

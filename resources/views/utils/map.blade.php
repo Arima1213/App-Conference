@@ -3,23 +3,56 @@
 		<h2 class="title-conference"><span>Our location</span></h2>
 		<div class="row">
 			<div class="col-lg-5 conference-map-info">
-				<ul class="mission-meta">
-					<li><i aria-hidden="true" class="fas fa-calendar-alt"></i>28.08.2019</li>
-					<li><i class="far fa-clock"></i>14:00 AM - 19:00 AM</li>
-				</ul>
-				<h3>New York Mark Plaza <span>3rd floor</span> Conference Hall</h3>
-				<div class="conference-map-content">
-					<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas
-					</p>
-				</div>
-				<ul class="mission-meta">
-					<li><i aria-hidden="true" class="fas fa-map-marker-alt"></i>New York, Valley Stream</li>
-				</ul>
+				@if ($conference && $conference->venues->first())
+					@php
+						$venue = $conference->venues->first();
+						$startTime = optional($conference->schedules->first())->start_time;
+						$date = $startTime ? \Carbon\Carbon::parse($startTime)->format('d.m.Y') : '-';
+						$time = $startTime ? \Carbon\Carbon::parse($startTime)->format('H:i') : '-';
+					@endphp
+					<ul class="mission-meta">
+						<li><i class="fas fa-calendar-alt"></i>{{ $date }}</li>
+						<li><i class="far fa-clock"></i>{{ $time }}</li>
+					</ul>
+					<h3>{{ $venue->name }} <span>Conference Hall</span></h3>
+					<div class="conference-map-content">
+						<p>{{ $venue->address }}</p>
+					</div>
+					<ul class="mission-meta">
+						<li><i class="fas fa-map-marker-alt"></i>{{ $venue->address }}</li>
+					</ul>
+				@else
+					<p>No venue available</p>
+				@endif
 			</div>
 			<div class="col-lg-7 conference-map-item">
-				<span>
-					<div id="map" class="cont-map google-map"></div>
-				</span>
+				@if ($venue?->map_url)
+					<div class="mapouter">
+						<div class="gmap_canvas">
+							<iframe class="gmap_iframe" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+								src="{{ $venue->map_url }}"></iframe>
+						</div>
+						<style>
+							.mapouter {
+								position: relative;
+								text-align: right;
+								width: 100%;
+								height: 400px;
+							}
+
+							.gmap_canvas {
+								overflow: hidden;
+								background: none !important;
+								width: 100%;
+								height: 400px;
+							}
+
+							.gmap_iframe {
+								height: 400px !important;
+							}
+						</style>
+					</div>
+				@endif
 			</div>
 		</div>
 	</div>

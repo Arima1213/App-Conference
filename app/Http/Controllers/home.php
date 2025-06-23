@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conference;
 use App\Models\Speaker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class home extends Controller
 {
@@ -18,7 +19,8 @@ class home extends Controller
         $conference = Conference::where('is_active', true)
             ->whereHas('schedules', fn($q) => $q->where('start_time', '>=', now()))
             ->with([
-                'schedules' => fn($q) => $q->where('start_time', '>=', now())->orderBy('start_time', 'asc'),
+                'schedules' => fn($q) => $q->where('start_time', '>=', now())->orderBy('start_time'),
+                'venues',
                 'seminarFees',
             ])
             ->get()
@@ -30,8 +32,8 @@ class home extends Controller
                 ->whereHas('schedules')
                 ->with([
                     'schedules' => fn($q) => $q->orderBy('start_time', 'desc'),
-                    'seminarFees',
                     'venues',
+                    'seminarFees',
                 ])
                 ->get()
                 ->sortByDesc(fn($conf) => optional($conf->schedules->first())->start_time)
@@ -45,10 +47,11 @@ class home extends Controller
             : null;
 
         $speakers = Speaker::all();
-
-        // pisahkan biaya nasional dan internasional
         $nationalFees = $conference?->seminarFees->where('type', 'national') ?? collect();
         $internationalFees = $conference?->seminarFees->where('type', 'international') ?? collect();
+
+        $venue = $conference?->venues->first(); // hanya ambil satu venue utama untuk tampil
+        $venueQuery = $venue ? urlencode($venue->name . ', ' . $venue->address) : null;
 
         return view('index', compact(
             'conference',
@@ -57,6 +60,7 @@ class home extends Controller
             'speakers',
             'nationalFees',
             'internationalFees',
+            'venue',
         ));
     }
 }
