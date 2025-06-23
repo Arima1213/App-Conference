@@ -67,3 +67,28 @@
 		vertical-align: middle;
 	}
 </style>
+<style>
+	.table-bordered {
+		border: 2px solid #000;
+	}
+
+	.table-bordered th,
+	.table-bordered td {
+		border: 1px solid #000;
+		padding: 0.75rem;
+		vertical-align: middle;
+		font-size: 1.1rem;
+		color: #222;
+		background-color: #fff;
+	}
+
+	.table-bordered th {
+		background-color: #f8f9fa;
+		font-weight: bold;
+		color: #111;
+	}
+
+	.table-bordered tbody tr:hover td {
+		background-color: #f1f1f1;
+	}
+</style>

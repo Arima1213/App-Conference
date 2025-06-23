@@ -208,8 +208,13 @@ class ConferenceResource extends Resource
                                             'Non-presenter' => 'Non-presenter',
                                         ])
                                         ->required(),
-                                    Forms\Components\TextInput::make('amount')
-                                        ->label('Amount')
+                                    Forms\Components\TextInput::make('early_bird_price')
+                                        ->label('Early Bird Price')
+                                        ->numeric()
+                                        ->minValue(0)
+                                        ->required(),
+                                    Forms\Components\TextInput::make('regular_price')
+                                        ->label('Regular Price')
                                         ->numeric()
                                         ->minValue(0)
                                         ->required(),
@@ -221,7 +226,7 @@ class ConferenceResource extends Resource
                                         ])
                                         ->required(),
                                 ])
-                                ->createItemButtonLabel('Add Seminar Fee')
+                                ->addActionLabel('Add Seminar Fee')
                                 ->columns(2)
                                 ->helperText('Add seminar fees for each participant type and category.')
                                 ->defaultItems(1),
