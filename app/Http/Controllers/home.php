@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conference;
+use App\Models\Speaker;
 use Illuminate\Http\Request;
 
 class home extends Controller
@@ -29,7 +30,7 @@ class home extends Controller
             })
             ->first();
 
-        // Jika tidak ada conference mendatang, ambil conference aktif terakhir meskipun sudah lewat
+        // Jika tidak ada conference mendatang, ambil conference aktif terakhir
         if (!$conference) {
             $conference = Conference::where('is_active', true)
                 ->whereHas('schedules')
@@ -37,7 +38,7 @@ class home extends Controller
                     'schedules' => function ($query) {
                         $query->orderBy('start_time', 'desc');
                     },
-                    'venues' // tambahkan relasi venue
+                    'venues'
                 ])
                 ->get()
                 ->sortByDesc(function ($conf) {
@@ -46,7 +47,6 @@ class home extends Controller
                 ->first();
         }
 
-        // Jika ingin tetap menggunakan array seperti sebelumnya
         $conferences = $conference ? [$conference] : [];
 
         // Ambil waktu countdown dari jadwal terdekat (jika ada)
@@ -54,10 +54,14 @@ class home extends Controller
             ? $conference->schedules->first()->start_time
             : null;
 
+        // Ambil keynote speaker
+        $keynoteSpeakers = Speaker::where('is_keynote', true)->get();
+
         return view('index', [
-            'conference'     => $conference,
-            'conferences'    => $conferences,
-            'countdownTime'  => $countdownTime,
+            'conference'      => $conference,
+            'conferences'     => $conferences,
+            'countdownTime'   => $countdownTime,
+            'keynoteSpeakers' => $keynoteSpeakers,
         ]);
     }
 }
