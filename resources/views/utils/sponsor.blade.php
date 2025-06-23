@@ -1,4 +1,4 @@
-<section class="s-clients s-partners">
+<section id="sponsors" class="s-clients s-partners">
 	<div class="container">
 		<h2 class="title-conference"><span>Our partners</span></h2>
 		<div class="clients-cover">

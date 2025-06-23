@@ -1,4 +1,4 @@
-<section class="s-pricing-table mt-5">
+<section id="pricing" class="s-pricing-table mt-5">
 	<div class="container">
 		<div class="row">
 			<!-- INTERNATIONAL -->

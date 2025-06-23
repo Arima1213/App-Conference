@@ -1,5 +1,5 @@
 @if ($speakers->count())
-	<section class="s-our-speaker team-our-speaker">
+	<section id="our-speaker" class="s-our-speaker team-our-speaker">
 		<div class="container mt-5 pt-5">
 			<h2 class="title-conference"><span>Speakers</span></h2>
 			<div class="slider-our-speaker">

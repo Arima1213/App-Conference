@@ -20,11 +20,14 @@
 			<div class="header-nav-cover">
 				<nav class="nav-menu menu">
 					<ul class="nav-list">
-						<li><a href="#conference">Conference</a></li>
+						<li><a href=".s-conference-slider">Conference</a></li>
+						<li><a href="#about">about</a></li>
+						<li><a href="#our-speaker">our speaker</a></li>
 						<li><a href="#schedule">schedule</a></li>
+						<li><a href="#pricing">pricing</a></li>
 						<li><a href="#location">location</a></li>
-						<li><a href="#register">register</a></li>
-						<li><a href="#news">news</a></li>
+						<li><a href="#sponsors">sponsors</a></li>
+
 						{{-- <li class="dropdown">
 							<a href="#">pages <i class="fa fa-angle-down" aria-hidden="true"></i></a>
 							<ul>
