@@ -11,6 +11,19 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
+/**
+ * Helper function to generate a fee input field for the conference form.
+ */
+function feeInput(string $label, string $type, string $currency)
+{
+    return \Filament\Forms\Components\TextInput::make("fees.{$type}.{$label}")
+        ->label("{$label} ({$currency})")
+        ->numeric()
+        ->minValue(0)
+        ->nullable()
+        ->columnSpanFull();
+}
+
 class ConferenceResource extends Resource
 {
     protected static ?string $model = Conference::class;
@@ -172,6 +185,48 @@ class ConferenceResource extends Resource
                                 ->columns(2)
                                 ->helperText('Add sponsors supporting this conference.'),
                         ]),
+                    Forms\Components\Wizard\Step::make('Seminar Fees')
+                        ->schema([
+                            Forms\Components\Repeater::make('seminarFees')
+                                ->relationship('seminarFees')
+                                ->label('Seminar Fees')
+                                ->schema([
+                                    Forms\Components\Select::make('type')
+                                        ->label('Type')
+                                        ->options([
+                                            'international' => 'International',
+                                            'national' => 'National',
+                                        ])
+                                        ->required(),
+                                    Forms\Components\Select::make('category')
+                                        ->label('Category')
+                                        ->options([
+                                            'IEEE Member' => 'IEEE Member',
+                                            'Non-IEEE Member' => 'Non-IEEE Member',
+                                            'Student IEEE Member' => 'Student IEEE Member',
+                                            'Student Non IEEE Member' => 'Student Non IEEE Member',
+                                            'Non-presenter' => 'Non-presenter',
+                                        ])
+                                        ->required(),
+                                    Forms\Components\TextInput::make('amount')
+                                        ->label('Amount')
+                                        ->numeric()
+                                        ->minValue(0)
+                                        ->required(),
+                                    Forms\Components\Select::make('currency')
+                                        ->label('Currency')
+                                        ->options([
+                                            'USD' => 'USD',
+                                            'IDR' => 'IDR',
+                                        ])
+                                        ->required(),
+                                ])
+                                ->createItemButtonLabel('Add Seminar Fee')
+                                ->columns(2)
+                                ->helperText('Add seminar fees for each participant type and category.')
+                                ->defaultItems(1),
+                        ])
+                        ->columns(1),
                     Forms\Components\Wizard\Step::make('Important Dates')
                         ->schema([
                             Forms\Components\Hidden::make('id'),
