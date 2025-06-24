@@ -76,7 +76,7 @@
 					<div class="conference-description text-gray-700 dark:text-gray-200">
 						{{ $conference->description }}
 					</div>
-					<a href="{{ route('register', ['conference' => $encryptedConferenceId]) }}" class="register-btn">
+					<a href="{{ route('filament.participant.resources.participants.create', ['conference' => $encryptedConferenceId]) }}" class="register-btn">
 						Register Now
 					</a>
 				</div>

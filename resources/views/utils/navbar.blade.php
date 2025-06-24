@@ -39,7 +39,7 @@
 						</li> --}}
 					</ul>
 				</nav>
-				<a href="#register" class="btn btn-white"><span>Register Now</span></a>
+				<a href="{{ url('/participant') }}" class="btn btn-white"><span>Register Now</span></a>
 			</div>
 		</div>
 	</div>
