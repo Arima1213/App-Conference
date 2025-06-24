@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conference;
+use App\Models\ImportantDate;
 use App\Models\Speaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -57,6 +58,10 @@ class home extends Controller
 
         $sponsors = $conference?->sponsors ?? collect();
 
+        $importantDates = $conference
+            ? ImportantDate::where('conference_id', $conference->id)->orderBy('date')->get()
+            : collect();
+
         return view('index', compact(
             'conference',
             'conferences',
@@ -66,6 +71,7 @@ class home extends Controller
             'internationalFees',
             'venue',
             'sponsors',
+            'importantDates'
         ));
     }
 }

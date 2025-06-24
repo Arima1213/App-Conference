@@ -14,10 +14,13 @@
 						<li><i class="fas fa-calendar-alt"></i>{{ $date }}</li>
 						<li><i class="far fa-clock"></i>{{ $time }}</li>
 					</ul>
-					<h3>{{ $venue->name }} <span>Conference Hall</span></h3>
-					<div class="conference-map-content">
-						<p>{{ $venue->address }}</p>
-					</div>
+					@php
+						$venueName = $venue->name;
+						$words = explode(' ', $venueName);
+						$highlightWord = count($words) > 1 ? $words[1] : $words[0];
+						$venueNameHighlighted = str_replace($highlightWord, "<span>{$highlightWord}</span>", $venueName, $count);
+					@endphp
+					<h3>{!! $venueNameHighlighted !!}</h3>
 					<ul class="mission-meta">
 						<li><i class="fas fa-map-marker-alt"></i>{{ $venue->address }}</li>
 					</ul>

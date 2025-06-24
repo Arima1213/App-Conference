@@ -32,7 +32,7 @@
 		<div class="container">
 			<h2 class="title-conference">
 				<span>
-					{{ $conference->title ?? 'Our mission' }}
+					Conference Details
 				</span>
 			</h2>
 			<div class="row">
@@ -64,7 +64,7 @@
 							@endif
 						</li>
 					</ul>
-					<h4>{{ $conference->subtitle ?? 'Od tempor incididunt ut labore aliqua. ullamco laboris nisi ut aliquip' }}</h4>
+					<h4>{{ $conference->title ?? 'Od tempor incididunt ut labore aliqua. ullamco laboris nisi ut aliquip' }}</h4>
 					<div class="mission-info-text">
 						<p>
 							{{ $conference->description ?? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusm od tempor incididunt ut labore et dolore magna aliqua. Ut enim minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip' }}

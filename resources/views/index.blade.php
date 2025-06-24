@@ -32,6 +32,10 @@
 	@include('utils.keynoteSpeaker')
 	<!-- ========== S-KEYNOTE-SPEAKER END ========== -->
 
+	<!-- ============ IMPORTANT DATE ============ -->
+	@include('utils.importantDate')
+	<!-- ========== IMPORTANT DATE END ========== -->
+
 	<!-- ============ SPEAKER & SCHEDULE ============ -->
 	@include('utils.speakerSchedule')
 	<!-- ========== SPEAKER & SCHEDULE END ========== -->
