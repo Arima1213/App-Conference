@@ -1,4 +1,5 @@
 <section id="pricing" class="s-pricing-table mt-5">
+	<h2 class="title-conference"><span>Seminar Fees</span></h2>
 	<div class="container">
 		<div class="row">
 			<!-- INTERNATIONAL -->
