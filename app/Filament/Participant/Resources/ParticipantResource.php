@@ -19,8 +19,6 @@ class ParticipantResource extends Resource
 {
     protected static ?string $model = Participant::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
@@ -40,27 +38,35 @@ class ParticipantResource extends Resource
 
         return $form
             ->schema([
-                Forms\Components\Section::make('Data Peserta')
+                Forms\Components\Section::make('Participant Information')
                     ->schema([
                         Forms\Components\Hidden::make('user_id')
                             ->default($userId),
                         Forms\Components\Hidden::make('conference_id')
                             ->default($conferenceId),
                         Forms\Components\TextInput::make('nik')
-                            ->label('NIK')
-                            ->maxLength(255),
+                            ->label('National Identification Number')
+                            ->numeric()
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Enter your NIK'),
                         Forms\Components\TextInput::make('university')
-                            ->label('Universitas')
-                            ->maxLength(255),
+                            ->label('University')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Enter your university name'),
                         Forms\Components\TextInput::make('phone')
-                            ->label('Nomor Telepon')
+                            ->label('Phone Number')
                             ->tel()
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(20)
+                            ->placeholder('Enter your phone number'),
                         Forms\Components\TextInput::make('paper_title')
-                            ->label('Judul Paper')
-                            ->maxLength(255),
+                            ->label('Paper Title(optional)')
+                            ->maxLength(255)
+                            ->placeholder('Enter your paper title (if applicable)'),
                     ])
+                    ->columns(2)
             ]);
     }
 
