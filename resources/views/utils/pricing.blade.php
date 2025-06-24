@@ -3,7 +3,7 @@
 	<div class="container">
 		<div class="row">
 			<!-- INTERNATIONAL -->
-			<div class="col-md-6 text-center">
+			<div class="col-md-6 pt-4 text-center">
 				<h3 class="mb-3"><strong>INTERNATIONAL PARTICIPANT</strong></h3>
 				<table class="table-bordered mx-auto table text-center" style="width: auto;">
 					<thead class="thead-light">
@@ -29,7 +29,7 @@
 			</div>
 
 			<!-- NATIONAL -->
-			<div class="col-md-6 text-center">
+			<div class="col-md-6 pt-4 text-center">
 				<h3 class="mb-3"><strong>NATIONAL PARTICIPANT</strong></h3>
 				<table class="table-bordered mx-auto table text-center" style="width: auto;">
 					<thead class="thead-light">
