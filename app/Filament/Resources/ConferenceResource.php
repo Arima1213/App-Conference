@@ -66,6 +66,10 @@ class ConferenceResource extends Resource
                     Forms\Components\Wizard\Step::make('Schedules')
                         ->schema([
                             Forms\Components\Repeater::make('schedules')
+                                ->reorderableWithButtons()
+                                ->minItems(1)
+                                ->itemLabel(fn(array $state): ?string => $state['title'] ?? null)
+                                ->collapsible()
                                 ->relationship('schedules')
                                 ->label('Schedules')
                                 ->columnSpanFull()
@@ -121,46 +125,50 @@ class ConferenceResource extends Resource
                         ]),
                     Forms\Components\Wizard\Step::make('Venues')
                         ->schema([
-                            Forms\Components\Section::make('Venues')
+                            Forms\Components\Repeater::make('venues')
+                                ->relationship('venues')
+                                ->itemLabel(fn(array $state): ?string => $state['name'] ?? null)
+                                ->label('Venues')
+                                ->columnSpanFull()
                                 ->schema([
-                                    Forms\Components\Repeater::make('venues')
-                                        ->relationship('venues')
-                                        ->label('Venues')
-                                        ->columnSpanFull()
-                                        ->schema([
-                                            Forms\Components\TextInput::make('name')
-                                                ->required()
-                                                ->label('Venue Name')
-                                                ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('name')
+                                        ->required()
+                                        ->label('Venue Name')
+                                        ->columnSpanFull(),
 
-                                            Forms\Components\TextInput::make('address')
-                                                ->required()
-                                                ->label('Address')
-                                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
-                                                    $encodedAddress = urlencode($state);
-                                                    $embedUrl = "https://maps.google.com/maps?q={$encodedAddress}&output=embed";
-                                                    $set('map_url', $embedUrl);
-                                                })
-                                                ->placeholder('Enter venue address')
-                                                ->columnSpanFull(),
+                                    Forms\Components\TextInput::make('address')
+                                        ->required()
+                                        ->label('Address')
+                                        ->reactive()
+                                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                                            $encodedAddress = urlencode($state);
+                                            $embedUrl = "https://maps.google.com/maps?q={$encodedAddress}&output=embed";
+                                            $set('map_url', $embedUrl);
+                                        })
+                                        ->placeholder('Enter venue address')
+                                        ->columnSpanFull(),
 
-                                            Forms\Components\TextInput::make('map_url')
-                                                ->label('Google Maps Embed URL')
-                                                ->readOnly()
-                                                ->helperText('Auto-filled from address')
-                                                ->columnSpanFull(),
-                                        ])
-                                        ->addActionLabel('Add Venue')
-                                        ->columns(2)
-                                        ->helperText('List all venues for this conference.'),
+                                    Forms\Components\TextInput::make('map_url')
+                                        ->label('Google Maps Embed URL')
+                                        ->readOnly()
+                                        ->helperText('Auto-filled from address')
+                                        ->columnSpanFull(),
                                 ])
+                                // ->addActionLabel('Add Venue') // Remove or comment out this line to hide the button
+                                ->columns(2)
+                                ->helperText('List all venues for this conference.')
+                                ->addable(false)
                         ]),
                     Forms\Components\Wizard\Step::make('Sponsors')
                         ->schema([
                             Forms\Components\Repeater::make('sponsors')
+                                ->itemLabel(fn(array $state): ?string => $state['name'] ?? null)
                                 ->relationship('sponsors')
                                 ->label('Sponsors')
                                 ->columnSpanFull()
+                                ->reorderableWithButtons()
+                                ->minItems(1)
+                                ->collapsible()
                                 ->schema([
                                     Forms\Components\Hidden::make('id'),
                                     Forms\Components\TextInput::make('name')
@@ -191,7 +199,11 @@ class ConferenceResource extends Resource
                     Forms\Components\Wizard\Step::make('Seminar Fees')
                         ->schema([
                             Forms\Components\Repeater::make('seminarFees')
+                                ->itemLabel(fn(array $state): ?string => isset($state['type'], $state['category']) ? "{$state['type']} | {$state['category']}" : ($state['category'] ?? null))
                                 ->relationship('seminarFees')
+                                ->reorderableWithButtons()
+                                ->minItems(1)
+                                ->collapsible()
                                 ->label('Seminar Fees')
                                 ->schema([
                                     Forms\Components\Select::make('type')
@@ -226,14 +238,6 @@ class ConferenceResource extends Resource
                                         ->minValue(0)
                                         ->required()
                                         ->helperText('Enter the standard price for regular registration.'),
-                                    Forms\Components\Select::make('currency')
-                                        ->label('Currency')
-                                        ->options([
-                                            'USD' => 'USD',
-                                            'IDR' => 'IDR',
-                                        ])
-                                        ->required()
-                                        ->helperText('Select the currency for this fee.'),
                                 ])
                                 ->addActionLabel('Add Seminar Fee')
                                 ->columns(2)
@@ -245,6 +249,10 @@ class ConferenceResource extends Resource
                         ->schema([
                             Forms\Components\Hidden::make('id'),
                             Forms\Components\Repeater::make('importantDates')
+                                ->reorderableWithButtons()
+                                ->itemLabel(fn(array $state): ?string => $state['title'] ?? null)
+                                ->minItems(1)
+                                ->collapsible()
                                 ->relationship('importantDates')
                                 ->label('Important Dates')
                                 ->columnSpanFull()

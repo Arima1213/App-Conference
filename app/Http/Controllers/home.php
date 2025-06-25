@@ -50,8 +50,8 @@ class home extends Controller
             : null;
 
         $speakers = Speaker::all();
-        $nationalFees = $conference?->seminarFees->where('type', 'national') ?? collect();
-        $internationalFees = $conference?->seminarFees->where('type', 'international') ?? collect();
+        $onlineFees = $conference?->seminarFees->where('type', 'online') ?? collect();
+        $offlineFees = $conference?->seminarFees->where('type', 'offline') ?? collect();
 
         $venue = $conference?->venues->first(); // hanya ambil satu venue utama untuk tampil
         $venueQuery = $venue ? urlencode($venue->name . ', ' . $venue->address) : null;
@@ -67,8 +67,8 @@ class home extends Controller
             'conferences',
             'countdownTime',
             'speakers',
-            'nationalFees',
-            'internationalFees',
+            'onlineFees',
+            'offlineFees',
             'venue',
             'sponsors',
             'importantDates'
