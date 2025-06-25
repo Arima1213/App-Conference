@@ -12,7 +12,6 @@ class SeminarFee extends Model
         'category',
         'early_bird_price',
         'regular_price',
-        'currency',
     ];
 
     public function conference()
