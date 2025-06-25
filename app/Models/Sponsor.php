@@ -8,6 +8,7 @@ class Sponsor extends Model
 {
     protected $fillable = [
         'conference_id',
+        'level', // 'gold', 'silver', 'bronze'
         'name',
         'logo',
         'website',

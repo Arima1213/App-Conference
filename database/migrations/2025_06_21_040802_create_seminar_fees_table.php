@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('seminar_fees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
-            $table->enum('type', ['national', 'international']);
-            $table->string('category'); // e.g., IEEE Member, Non-IEEE Member
+            $table->enum('type', ['online', 'offline']);
+            $table->string('category');
             $table->decimal('early_bird_price', 10, 2);
             $table->decimal('regular_price', 10, 2);
-            $table->enum('currency', ['USD', 'IDR']);
             $table->timestamps();
         });
     }

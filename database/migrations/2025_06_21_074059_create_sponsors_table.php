@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('sponsors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
+            $table->enum('level', ['gold', 'silver', 'bronze']);
+            // 'gold', 'silver', 'bronze' are the levels of sponsorship
             $table->string('name');
             $table->string('logo')->nullable(); // path ke logo
             $table->string('website')->nullable();
