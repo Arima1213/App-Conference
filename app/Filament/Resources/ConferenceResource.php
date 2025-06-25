@@ -194,37 +194,43 @@ class ConferenceResource extends Resource
                                     Forms\Components\Select::make('type')
                                         ->label('Type')
                                         ->options([
-                                            'international' => 'International',
-                                            'national' => 'National',
+                                            'online' => 'Online',
+                                            'offline' => 'Offline',
                                         ])
-                                        ->required(),
+                                        ->required()
+                                        ->helperText('Select whether this fee applies to online or offline participation.'),
                                     Forms\Components\Select::make('category')
-                                        ->label('Category')
+                                        ->label('Option')
                                         ->options([
-                                            'IEEE Member' => 'IEEE Member',
-                                            'Non-IEEE Member' => 'Non-IEEE Member',
-                                            'Student IEEE Member' => 'Student IEEE Member',
-                                            'Student Non IEEE Member' => 'Student Non IEEE Member',
-                                            'Non-presenter' => 'Non-presenter',
+                                            'Conference | Member' => 'Conference | Member',
+                                            'Conference | Non-Member' => 'Conference | Non-Member',
+                                            'Deliberation | Member' => 'Deliberation | Member',
+                                            'Deliberation | Non IEEE Member' => 'Deliberation | Non IEEE Member',
+                                            'Deliberation & Conference | Member' => 'Deliberation & Conference | Member',
+                                            'Deliberation & Conference | Non-Member' => 'Deliberation & Conference | Non-Member',
                                         ])
-                                        ->required(),
+                                        ->required()
+                                        ->helperText('Choose the participant category for this fee option.'),
                                     Forms\Components\TextInput::make('early_bird_price')
                                         ->label('Early Bird Price')
                                         ->numeric()
                                         ->minValue(0)
-                                        ->required(),
+                                        ->required()
+                                        ->helperText('Enter the discounted price for early bird registration.'),
                                     Forms\Components\TextInput::make('regular_price')
                                         ->label('Regular Price')
                                         ->numeric()
                                         ->minValue(0)
-                                        ->required(),
+                                        ->required()
+                                        ->helperText('Enter the standard price for regular registration.'),
                                     Forms\Components\Select::make('currency')
                                         ->label('Currency')
                                         ->options([
                                             'USD' => 'USD',
                                             'IDR' => 'IDR',
                                         ])
-                                        ->required(),
+                                        ->required()
+                                        ->helperText('Select the currency for this fee.'),
                                 ])
                                 ->addActionLabel('Add Seminar Fee')
                                 ->columns(2)
