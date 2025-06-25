@@ -3,27 +3,25 @@
 	<div class="container">
 		<div class="row">
 			<!-- OFFLINE -->
-			<div class="col-md-6 pt-4 text-center">
-				<h3 class="mb-3"><strong>OFFLINE PARTICIPANT</strong></h3>
-				<table class="table-bordered mx-auto table text-center" style="width: auto;">
-					<thead class="thead-light">
+			<div style="width: 50%; float: left; padding-top: 1.5rem; text-align: center;">
+				<h3 style="margin-bottom: 1rem;"><strong>OFFLINE PARTICIPANT</strong></h3>
+				<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; text-align: center; width: auto;">
+					<thead style="background-color: #f8f9fa;">
 						<tr>
-							<th rowspan="2" class="align-middle">Category of Participants</th>
-							<th rowspan="2" class="align-middle">Type</th>
-							<th colspan="2">Offline Fee</th>
+							<th rowspan="2" style="border: 1px solid #dee2e6; vertical-align: middle; padding: 8px;">Category of Participants</th>
+							<th colspan="2" style="border: 1px solid #dee2e6; padding: 8px;">Offline Fee</th>
 						</tr>
 						<tr>
-							<th>Early Bird</th>
-							<th>Regular</th>
+							<th style="border: 1px solid #dee2e6; padding: 8px;">Early Bird</th>
+							<th style="border: 1px solid #dee2e6; padding: 8px;">Regular</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach ($offlineFees as $fee)
 							<tr>
-								<td>{{ $fee->category }}</td>
-								<td class="text-capitalize">{{ $fee->type }}</td>
-								<td>{{ number_format($fee->early_bird_price, 0, ',', '.') }}</td>
-								<td>{{ number_format($fee->regular_price, 0, ',', '.') }}</td>
+								<td style="border: 1px solid #dee2e6; padding: 8px;">{{ $fee->category }}</td>
+								<td style="border: 1px solid #dee2e6; padding: 8px;">{{ number_format($fee->early_bird_price, 0, ',', '.') }}</td>
+								<td style="border: 1px solid #dee2e6; padding: 8px;">{{ number_format($fee->regular_price, 0, ',', '.') }}</td>
 							</tr>
 						@endforeach
 					</tbody>
@@ -31,32 +29,31 @@
 			</div>
 
 			<!-- ONLINE -->
-			<div class="col-md-6 pt-4 text-center">
-				<h3 class="mb-3"><strong>ONLINE PARTICIPANT</strong></h3>
-				<table class="table-bordered mx-auto table text-center" style="width: auto;">
-					<thead class="thead-light">
+			<div style="width: 50%; float: left; padding-top: 1.5rem; text-align: center;">
+				<h3 style="margin-bottom: 1rem;"><strong>ONLINE PARTICIPANT</strong></h3>
+				<table style="border-collapse: collapse; margin-left: auto; margin-right: auto; text-align: center; width: auto;">
+					<thead style="background-color: #f8f9fa;">
 						<tr>
-							<th rowspan="2" class="align-middle">Category of Participants</th>
-							<th rowspan="2" class="align-middle">Type</th>
-							<th colspan="2">Online Fee</th>
+							<th rowspan="2" style="border: 1px solid #dee2e6; vertical-align: middle; padding: 8px;">Category of Participants</th>
+							<th colspan="2" style="border: 1px solid #dee2e6; padding: 8px;">Online Fee</th>
 						</tr>
 						<tr>
-							<th>Early Bird</th>
-							<th>Regular</th>
+							<th style="border: 1px solid #dee2e6; padding: 8px;">Early Bird</th>
+							<th style="border: 1px solid #dee2e6; padding: 8px;">Regular</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach ($onlineFees as $fee)
 							<tr>
-								<td>{{ $fee->category }}</td>
-								<td class="text-capitalize">{{ $fee->type }}</td>
-								<td>{{ number_format($fee->early_bird_price, 0, ',', '.') }}</td>
-								<td>{{ number_format($fee->regular_price, 0, ',', '.') }}</td>
+								<td style="border: 1px solid #dee2e6; padding: 8px;">{{ $fee->category }}</td>
+								<td style="border: 1px solid #dee2e6; padding: 8px;">{{ number_format($fee->early_bird_price, 0, ',', '.') }}</td>
+								<td style="border: 1px solid #dee2e6; padding: 8px;">{{ number_format($fee->regular_price, 0, ',', '.') }}</td>
 							</tr>
 						@endforeach
 					</tbody>
 				</table>
 			</div>
+			<div style="clear: both;"></div>
 		</div>
 	</div>
 </section>
