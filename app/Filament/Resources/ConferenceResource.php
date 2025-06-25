@@ -121,36 +121,39 @@ class ConferenceResource extends Resource
                         ]),
                     Forms\Components\Wizard\Step::make('Venues')
                         ->schema([
-                            Forms\Components\Repeater::make('venues')
-                                ->relationship('venues')
-                                ->label('Venues')
-                                ->columnSpanFull()
+                            Forms\Components\Section::make('Venues')
                                 ->schema([
-                                    Forms\Components\TextInput::make('name')
-                                        ->required()
-                                        ->label('Venue Name')
-                                        ->columnSpanFull(),
+                                    Forms\Components\Repeater::make('venues')
+                                        ->relationship('venues')
+                                        ->label('Venues')
+                                        ->columnSpanFull()
+                                        ->schema([
+                                            Forms\Components\TextInput::make('name')
+                                                ->required()
+                                                ->label('Venue Name')
+                                                ->columnSpanFull(),
 
-                                    Forms\Components\TextInput::make('address')
-                                        ->required()
-                                        ->label('Address')
-                                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
-                                            $encodedAddress = urlencode($state);
-                                            $embedUrl = "https://maps.google.com/maps?q={$encodedAddress}&output=embed";
-                                            $set('map_url', $embedUrl);
-                                        })
-                                        ->placeholder('Enter venue address')
-                                        ->columnSpanFull(),
+                                            Forms\Components\TextInput::make('address')
+                                                ->required()
+                                                ->label('Address')
+                                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                                                    $encodedAddress = urlencode($state);
+                                                    $embedUrl = "https://maps.google.com/maps?q={$encodedAddress}&output=embed";
+                                                    $set('map_url', $embedUrl);
+                                                })
+                                                ->placeholder('Enter venue address')
+                                                ->columnSpanFull(),
 
-                                    Forms\Components\TextInput::make('map_url')
-                                        ->label('Google Maps Embed URL')
-                                        ->readOnly()
-                                        ->helperText('Auto-filled from address')
-                                        ->columnSpanFull(),
+                                            Forms\Components\TextInput::make('map_url')
+                                                ->label('Google Maps Embed URL')
+                                                ->readOnly()
+                                                ->helperText('Auto-filled from address')
+                                                ->columnSpanFull(),
+                                        ])
+                                        ->addActionLabel('Add Venue')
+                                        ->columns(2)
+                                        ->helperText('List all venues for this conference.'),
                                 ])
-                                ->addActionLabel('Add Venue')
-                                ->columns(2)
-                                ->helperText('List all venues for this conference.'),
                         ]),
                     Forms\Components\Wizard\Step::make('Sponsors')
                         ->schema([
