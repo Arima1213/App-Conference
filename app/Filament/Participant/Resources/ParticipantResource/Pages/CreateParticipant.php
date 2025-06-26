@@ -131,10 +131,7 @@ class CreateParticipant extends CreateRecord
                 ->persistent()
                 ->send();
 
-            // Redirect ke halaman pembayaran atau halaman lain sesuai kebutuhan
-            $this->redirect(\App\Filament\Resources\PaymentResource::getUrl('index', [
-                'participant' => $participant->id,
-            ]));
+            $this->redirect('/participant/payments');
         } else {
             \Filament\Notifications\Notification::make()
                 ->title('Failed to create participant or payment.')
