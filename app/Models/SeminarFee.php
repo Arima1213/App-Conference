@@ -18,4 +18,9 @@ class SeminarFee extends Model
     {
         return $this->belongsTo(Conference::class);
     }
+
+    public function participants()
+    {
+        return $this->hasMany(Participant::class);
+    }
 }

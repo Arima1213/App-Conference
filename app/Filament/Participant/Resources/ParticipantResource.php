@@ -11,8 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class ParticipantResource extends Resource
@@ -34,39 +32,75 @@ class ParticipantResource extends Resource
             }
         }
 
+        if (is_null($conferenceId)) {
+            session()->flash('modal', [
+                'type' => 'error',
+                'title' => 'Conference Not Found',
+                'message' => 'Conference ID tidak ditemukan atau tidak valid.',
+            ]);
+            // Use abort to stop execution and redirect
+            header('Location: /participant');
+            exit;
+        }
+
         $userId = Auth::user()->id;
 
         return $form
             ->schema([
-                Forms\Components\Section::make('Participant Information')
-                    ->schema([
-                        Forms\Components\Hidden::make('user_id')
-                            ->default($userId),
-                        Forms\Components\Hidden::make('conference_id')
-                            ->default($conferenceId),
-                        Forms\Components\TextInput::make('nik')
-                            ->label('National Identification Number')
-                            ->numeric()
-                            ->required()
-                            ->maxLength(255)
-                            ->placeholder('Enter your NIK'),
-                        Forms\Components\TextInput::make('university')
-                            ->label('University')
-                            ->required()
-                            ->maxLength(255)
-                            ->placeholder('Enter your university name'),
-                        Forms\Components\TextInput::make('phone')
-                            ->label('Phone Number')
-                            ->tel()
-                            ->required()
-                            ->maxLength(20)
-                            ->placeholder('Enter your phone number'),
-                        Forms\Components\TextInput::make('paper_title')
-                            ->label('Paper Title(optional)')
-                            ->maxLength(255)
-                            ->placeholder('Enter your paper title (if applicable)'),
-                    ])
-                    ->columns(2)
+                Forms\Components\Wizard::make([
+                    Forms\Components\Wizard\Step::make('Informasi Pribadi')
+                        ->schema([
+                            Forms\Components\Hidden::make('user_id')
+                                ->default($userId),
+                            Forms\Components\Hidden::make('conference_id')
+                                ->default($conferenceId),
+                            Forms\Components\TextInput::make('nik')
+                                ->label('National Identification Number')
+                                ->numeric()
+                                ->required()
+                                ->maxLength(255)
+                                ->placeholder('Enter your NIK'),
+                            Forms\Components\Select::make('university')
+                                ->label('University')
+                                ->required()
+                                ->options(
+                                    \App\Models\EducationalInstitution::query()
+                                        ->orderBy('nama_pt')
+                                        ->pluck('nama_pt', 'nama_pt')
+                                )
+                                ->searchable()
+                                ->placeholder('Select your university'),
+                            Forms\Components\TextInput::make('phone')
+                                ->label('Phone Number')
+                                ->tel()
+                                ->required()
+                                ->maxLength(20)
+                                ->placeholder('Enter your phone number'),
+                            Forms\Components\TextInput::make('paper_title')
+                                ->label('Paper Title(optional)')
+                                ->maxLength(255)
+                                ->placeholder('Enter your paper title (if applicable)'),
+                        ])
+                        ->columns(2),
+                    Forms\Components\Wizard\Step::make('Pilih Seminar Fee')
+                        ->schema([
+                            Forms\Components\Select::make('seminar_fee_id')
+                                ->label('Seminar Fee')
+                                ->required()
+                                ->options(function () use ($conferenceId) {
+                                    return \App\Models\SeminarFee::query()
+                                        ->where('conference_id', $conferenceId)
+                                        ->get()
+                                        ->mapWithKeys(function ($fee) {
+                                            $label = "{$fee->type} - {$fee->category} (Rp " . number_format($fee->regular_price, 0, ',', '.') . ")";
+                                            return [$fee->id => $label];
+                                        })
+                                        ->toArray();
+                                })
+                                ->searchable()
+                                ->placeholder('Pilih seminar fee'),
+                        ])
+                ])->columnSpanFull()
             ]);
     }
 

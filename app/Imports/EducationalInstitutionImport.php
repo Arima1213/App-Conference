@@ -14,6 +14,10 @@ class EducationalInstitutionImport implements ToModel
      */
     public function model(array $row)
     {
+        // Skip header row
+        if ($row[0] === 'lembaga') {
+            return null;
+        }
 
         return new EducationalInstitution([
             'lembaga'              => $row[0] ?? null,
