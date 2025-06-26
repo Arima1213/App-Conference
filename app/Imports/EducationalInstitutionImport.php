@@ -14,19 +14,20 @@ class EducationalInstitutionImport implements ToModel
      */
     public function model(array $row)
     {
+
         return new EducationalInstitution([
-            'lembaga'              => $row['lembaga'] ?? null,
-            'kelompok_koordinator' => $row['kelompok_koordinator'] ?? null,
-            'npsn'                 => $row['npsn'] ?? null,
-            'nama_pt'              => $row['nama_pt'] ?? null,
-            'nm_bp'                => $row['nm_bp'] ?? null,
-            'provinsi_pt'          => $row['provinsi_pt'] ?? null,
-            'jln'                  => $row['jln'] ?? null,
-            'kec_pt'               => $row['kec_pt'] ?? null,
-            'kabupaten_kota'       => $row['kabupaten_kota'] ?? null,
-            'website'              => $row['website'] ?? null,
-            'no_tel'               => $row['no_tel'] ?? null,
-            'email'                => $row['email'] ?? null,
+            'lembaga'              => $row[0] ?? null,
+            'kelompok_koordinator' => $row[1] ?? null,
+            'npsn'                 => $row[2] ?? null,
+            'nama_pt'              => $row[3] ?? null,
+            'nm_bp'                => $row[4] ?? null,
+            'provinsi_pt'          => $row[5] ?? null,
+            'jln'                  => $row[6] ?? null,
+            'kec_pt'               => $row[7] ?? null,
+            'kabupaten_kota'       => $row[8] ?? null,
+            'website'              => $row[9] ?? null,
+            'no_tel'               => $row[10] ?? null,
+            'email'                => $row[11] ?? null,
         ]);
     }
 }

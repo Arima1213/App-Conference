@@ -29,6 +29,8 @@ class ListEducationalInstitutions extends ListRecords
                 ->form([
                     FileUpload::make('file')
                         ->label('Select Excel File')
+                        ->disk('public') // pastikan file disimpan ke disk yang benar
+                        ->directory('imports') // opsional: folder khusus untuk upload excel
                         ->required()
                         ->acceptedFileTypes([
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -36,7 +38,9 @@ class ListEducationalInstitutions extends ListRecords
                         ]),
                 ])
                 ->action(function (array $data) {
-                    Excel::import(new EducationalInstitutionImport, $data['file']);
+                    $filePath = Storage::disk('public')->path($data['file']);
+
+                    Excel::import(new EducationalInstitutionImport, $filePath);
 
                     Notification::make()
                         ->title('Import Completed')
@@ -52,8 +56,8 @@ class ListEducationalInstitutions extends ListRecords
                 ->icon('heroicon-o-document-text')
                 ->modalHeading('Excel Template Format')
                 ->modalSubmitAction(false)
-                ->modalCancelActionLabel('Close')
-                ->modalWidth('lg')
+                ->modalCancelAction(false) // menghilangkan tombol Close, hanya menyisakan icon X
+                ->modalWidth('7xl')
                 ->modalContent(fn() => view('filament.modals.excel-template')),
         ];
     }
