@@ -51,6 +51,11 @@ class ParticipantResource extends Resource
                 Forms\Components\Wizard::make([
                     Forms\Components\Wizard\Step::make('Informasi Pribadi')
                         ->schema([
+                            // tambahkan hidden untuk participant_code, buat random dan unik nmenggunakan pattern
+                            Forms\Components\Hidden::make('participant_code')
+                                ->default(function () {
+                                    return 'P' . strtoupper(uniqid());
+                                }),
                             Forms\Components\Hidden::make('user_id')
                                 ->default($userId),
                             Forms\Components\Hidden::make('conference_id')
