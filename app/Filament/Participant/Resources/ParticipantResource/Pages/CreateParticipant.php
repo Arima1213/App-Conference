@@ -31,4 +31,36 @@ class CreateParticipant extends CreateRecord
     {
         return false; // hilangkan tombol 'Create & create another'
     }
+
+    // jangan tampilkan breadcrumbs pada halaman create
+    public function getBreadcrumb(): string
+    {
+        return '';
+    }
+
+    public function getTitle(): string
+    {
+        $request = request();
+        $conferenceId = null;
+        $conferenceName = '';
+
+        // Ambil parameter dari query string, bukan dari request body
+        if ($request->query->has('conference')) {
+            try {
+                $conferenceId = \Illuminate\Support\Facades\Crypt::decryptString($request->query('conference'));
+            } catch (\Exception $e) {
+                $conferenceId = null;
+            }
+        }
+
+        if ($conferenceId) {
+            // Misal model Conference ada di App\Models\Conference
+            $conference = \App\Models\Conference::find($conferenceId);
+            if ($conference) {
+                $conferenceName = $conference->title;
+            }
+        }
+
+        return 'Register Conference' . ($conferenceName ? ' - ' . $conferenceName : '');
+    }
 }

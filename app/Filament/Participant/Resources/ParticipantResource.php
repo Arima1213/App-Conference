@@ -24,9 +24,10 @@ class ParticipantResource extends Resource
         $request = request();
         $conferenceId = null;
 
-        if ($request->has('conference')) {
+        // Ambil parameter dari query string, bukan dari request body
+        if ($request->query->has('conference')) {
             try {
-                $conferenceId = \Illuminate\Support\Facades\Crypt::decryptString($request->get('conference'));
+                $conferenceId = \Illuminate\Support\Facades\Crypt::decryptString($request->query('conference'));
             } catch (\Exception $e) {
                 $conferenceId = null;
             }
