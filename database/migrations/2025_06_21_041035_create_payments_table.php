@@ -16,7 +16,7 @@ return new class extends Migration
             // foreign key to seminar fee
             $table->foreignId('seminar_fee_id')->constrained('seminar_fees')->onDelete('cascade');
             $table->foreignId('participant_id')->constrained('participants')->onDelete('cascade');
-            $table->string('invoice_code')->unique();
+            $table->string('invoice_code')->unique()->nullable();
             $table->decimal('amount', 12, 2);
             $table->timestamp('paid_at')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');

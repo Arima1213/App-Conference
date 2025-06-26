@@ -4,6 +4,7 @@ namespace App\Filament\Participant\Resources\ParticipantResource\Pages;
 
 use App\Filament\Participant\Resources\ParticipantResource;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Auth;
 
 class CreateParticipant extends CreateRecord
 {
@@ -92,5 +93,56 @@ class CreateParticipant extends CreateRecord
         $data['participant_code'] = $participantCode;
 
         return $data;
+    }
+
+    // buatkam fungsi ketika sudah tercreate maka buat data payment
+    protected function afterCreate(): void
+    {
+        $participant = $this->getRecord();
+        if ($participant) {
+            // Buat data payment untuk participant
+            $payment = new \App\Models\Payment();
+            $payment->participant_id = $participant->id;
+            $payment->seminar_fee_id = $participant->seminar_fee_id;
+            // Cek apakah user sudah pernah mendaftar di conference ini
+            $userId = Auth::user()->id;
+            $conferenceId = $participant->conference_id;
+            $hasRegistered = \App\Models\Participant::where('user_id', $userId)
+                ->exists();
+
+            // Ambil seminar fee terkait
+            $seminarFee = $participant->seminarFee;
+
+            // Pilih amount sesuai status pendaftaran
+            if ($seminarFee) {
+                $payment->amount = $hasRegistered ? $seminarFee->regular_price : $seminarFee->early_bird_price;
+            } else {
+                $payment->amount = 0;
+            }
+            $payment->payment_status = 'pending';
+            // $payment->invoice_code = 'INV-' . strtoupper(uniqid());
+            $payment->save();
+
+            // notifikasi sukses
+            \Filament\Notifications\Notification::make()
+                ->title('Participant and Payment Created Successfully')
+                ->body('Participant and associated payment have been created successfully. You can proceed to payment.')
+                ->success()
+                ->persistent()
+                ->send();
+
+            // Redirect ke halaman pembayaran atau halaman lain sesuai kebutuhan
+            $this->redirect(\App\Filament\Resources\PaymentResource::getUrl('index', [
+                'participant' => $participant->id,
+            ]));
+        } else {
+            \Filament\Notifications\Notification::make()
+                ->title('Failed to create participant or payment.')
+                ->body('An error occurred while creating the participant or associated payment. Please try again or contact support if the issue persists.')
+                ->danger()
+                ->persistent()
+                ->send();
+            $this->redirect('/participant');
+        }
     }
 }

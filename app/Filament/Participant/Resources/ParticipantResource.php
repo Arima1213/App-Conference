@@ -35,6 +35,10 @@ class ParticipantResource extends Resource
 
         $userId = Auth::user()->id;
 
+        // Cek apakah user sudah pernah mendaftar di conference ini
+        $hasRegistered = Participant::where('user_id', $userId)
+            ->exists();
+
         return $form
             ->schema([
                 Forms\Components\Wizard::make([
@@ -56,7 +60,7 @@ class ParticipantResource extends Resource
                                 ->relationship('educationalInstitution', 'nama_pt')
                                 ->searchable()
                                 ->placeholder('Select your university')
-                                ->preload(), // langsung tampilkan opsi tanpa harus diketik dulu
+                                ->preload(),
                             Forms\Components\TextInput::make('phone')
                                 ->label('Phone Number')
                                 ->tel()
@@ -75,18 +79,26 @@ class ParticipantResource extends Resource
                                 ->relationship('seminarFee')
                                 ->label('Seminar Fee')
                                 ->required()
-                                ->options(function () use ($conferenceId) {
+                                ->options(function () use ($conferenceId, $hasRegistered) {
                                     return \App\Models\SeminarFee::query()
                                         ->where('conference_id', $conferenceId)
                                         ->get()
-                                        ->mapWithKeys(function ($fee) {
-                                            $label = "{$fee->type} - {$fee->category} (Rp " . number_format($fee->regular_price, 0, ',', '.') . ")";
+                                        ->mapWithKeys(function ($fee) use ($hasRegistered) {
+                                            $price = $hasRegistered ? $fee->regular_price : $fee->early_bird_price;
+                                            $label = "{$fee->type} - {$fee->category} (Rp " . number_format($price, 0, ',', '.') . ")";
                                             return [$fee->id => $label];
                                         })
                                         ->toArray();
                                 })
                                 ->searchable()
                                 ->placeholder('Pilih seminar fee'),
+                            Forms\Components\Placeholder::make('price_info')
+                                ->label('Tipe Harga')
+                                ->content(function () use ($hasRegistered) {
+                                    return $hasRegistered
+                                        ? 'Anda mendapatkan harga Reguler karena sudah pernah mendaftar pada conference.'
+                                        : 'Anda mendapatkan harga Early Bird karena belum pernah mendaftar pada conference.';
+                                }),
                         ])
                 ])->columnSpanFull()
                     ->submitAction(
@@ -94,12 +106,12 @@ class ParticipantResource extends Resource
                             ? null
                             : new \Illuminate\Support\HtmlString(\Illuminate\Support\Facades\Blade::render(
                                 <<<'BLADE'
-                    <x-filament::button
-                        type="submit"
-                        size="sm"
-                    >
-                        Submit
-                    </x-filament::button>
+                <x-filament::button
+                type="submit"
+                size="sm"
+                >
+                Submit
+                </x-filament::button>
             BLADE
                             ))
                     )
