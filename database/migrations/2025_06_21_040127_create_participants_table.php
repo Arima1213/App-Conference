@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('seminar_fee_id')->constrained('seminar_fees')->onDelete('cascade');
             $table->string('nik')->nullable();
             $table->foreignId('educational_institution_id')
-                ->constrained('educational_institutions', 'id')
+                ->constrained('educational_institutions')
                 ->onDelete('cascade');
             $table->string('phone')->nullable();
             $table->string('participant_code')->unique();

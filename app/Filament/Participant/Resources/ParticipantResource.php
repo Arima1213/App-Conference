@@ -28,20 +28,9 @@ class ParticipantResource extends Resource
         if ($request->query->has('conference')) {
             try {
                 $conferenceId = \Illuminate\Support\Facades\Crypt::decryptString($request->query('conference'));
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $conferenceId = null;
             }
-        }
-
-        if (is_null($conferenceId)) {
-            session()->flash('modal', [
-                'type' => 'error',
-                'title' => 'Conference Not Found',
-                'message' => 'Conference ID tidak ditemukan atau tidak valid.',
-            ]);
-            // Use abort to stop execution and redirect
-            header('Location: /participant');
-            exit;
         }
 
         $userId = Auth::user()->id;
@@ -51,11 +40,6 @@ class ParticipantResource extends Resource
                 Forms\Components\Wizard::make([
                     Forms\Components\Wizard\Step::make('Informasi Pribadi')
                         ->schema([
-                            // tambahkan hidden untuk participant_code, buat random dan unik nmenggunakan pattern
-                            Forms\Components\Hidden::make('participant_code')
-                                ->default(function () {
-                                    return 'P' . strtoupper(uniqid());
-                                }),
                             Forms\Components\Hidden::make('user_id')
                                 ->default($userId),
                             Forms\Components\Hidden::make('conference_id')
@@ -66,16 +50,13 @@ class ParticipantResource extends Resource
                                 ->required()
                                 ->maxLength(255)
                                 ->placeholder('Enter your NIK'),
-                            Forms\Components\Select::make('university')
+                            Forms\Components\Select::make('educational_institution_id')
                                 ->label('University')
                                 ->required()
-                                ->options(
-                                    \App\Models\EducationalInstitution::query()
-                                        ->orderBy('nama_pt')
-                                        ->pluck('nama_pt', 'nama_pt')
-                                )
+                                ->relationship('educationalInstitution', 'nama_pt')
                                 ->searchable()
-                                ->placeholder('Select your university'),
+                                ->placeholder('Select your university')
+                                ->preload(), // langsung tampilkan opsi tanpa harus diketik dulu
                             Forms\Components\TextInput::make('phone')
                                 ->label('Phone Number')
                                 ->tel()
@@ -91,6 +72,7 @@ class ParticipantResource extends Resource
                     Forms\Components\Wizard\Step::make('Pilih Seminar Fee')
                         ->schema([
                             Forms\Components\Select::make('seminar_fee_id')
+                                ->relationship('seminarFee')
                                 ->label('Seminar Fee')
                                 ->required()
                                 ->options(function () use ($conferenceId) {
@@ -107,6 +89,20 @@ class ParticipantResource extends Resource
                                 ->placeholder('Pilih seminar fee'),
                         ])
                 ])->columnSpanFull()
+                    ->submitAction(
+                        request()->routeIs('filament.admin.resources.conferences.view')
+                            ? null
+                            : new \Illuminate\Support\HtmlString(\Illuminate\Support\Facades\Blade::render(
+                                <<<'BLADE'
+                    <x-filament::button
+                        type="submit"
+                        size="sm"
+                    >
+                        Submit
+                    </x-filament::button>
+            BLADE
+                            ))
+                    )
             ]);
     }
 

@@ -9,6 +9,11 @@ class CreateParticipant extends CreateRecord
 {
     protected static string $resource = ParticipantResource::class;
 
+    protected function getFormActions(): array
+    {
+        // Override to return an empty array, removing all form actions including the 'Create' button
+        return [];
+    }
 
     protected function getRedirectUrl(): string
     {
@@ -18,13 +23,6 @@ class CreateParticipant extends CreateRecord
     protected function getCreatedNotificationTitle(): ?string
     {
         return 'Participant successfully registered!';
-    }
-
-    protected function getFormActions(): array
-    {
-        return [
-            $this->getCreateFormAction(),
-        ];
     }
 
     protected function hasCreateAnother(): bool
@@ -62,5 +60,37 @@ class CreateParticipant extends CreateRecord
         }
 
         return 'Register Conference' . ($conferenceName ? ' - ' . $conferenceName : '');
+    }
+
+    // sebelum menjalankan create, lengkapi form participant code
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        // Ambil conference_id dari query string
+        $request = request();
+        $conferenceId = null;
+
+        if ($request->query->has('conference')) {
+            try {
+                $conferenceId = \Illuminate\Support\Facades\Crypt::decryptString($request->query('conference'));
+            } catch (\Exception $e) {
+                $conferenceId = null;
+            }
+        }
+
+        $fee = '';
+        if ($conferenceId) {
+            $conference = \App\Models\Conference::find($conferenceId);
+            if ($conference && isset($conference->fee)) {
+                $fee = (string) $conference->fee;
+            }
+        }
+
+        // Gunakan fee sebagai bagian dari pattern participant_code
+        $participantCode = 'P' . $fee . strtoupper(uniqid());
+        // dd($participantCode); // Uncomment if you want to debug
+
+        $data['participant_code'] = $participantCode;
+
+        return $data;
     }
 }
