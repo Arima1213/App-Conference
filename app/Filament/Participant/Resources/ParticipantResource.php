@@ -42,7 +42,7 @@ class ParticipantResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Wizard::make([
-                    Forms\Components\Wizard\Step::make('Informasi Pribadi')
+                    Forms\Components\Wizard\Step::make('Personal Information')
                         ->schema([
                             Forms\Components\Hidden::make('user_id')
                                 ->default($userId),
@@ -53,27 +53,31 @@ class ParticipantResource extends Resource
                                 ->numeric()
                                 ->required()
                                 ->maxLength(255)
-                                ->placeholder('Enter your NIK'),
+                                ->placeholder('Enter your NIK')
+                                ->helperText('Please enter your valid national identification number.'),
                             Forms\Components\Select::make('educational_institution_id')
                                 ->label('University')
                                 ->required()
                                 ->relationship('educationalInstitution', 'nama_pt')
                                 ->searchable()
                                 ->placeholder('Select your university')
-                                ->preload(),
+                                ->preload()
+                                ->helperText('Choose the university you are currently enrolled in or graduated from.'),
                             Forms\Components\TextInput::make('phone')
                                 ->label('Phone Number')
                                 ->tel()
                                 ->required()
                                 ->maxLength(20)
-                                ->placeholder('Enter your phone number'),
+                                ->placeholder('Enter your phone number')
+                                ->helperText('Enter an active phone number for contact purposes.'),
                             Forms\Components\TextInput::make('paper_title')
-                                ->label('Paper Title(optional)')
+                                ->label('Paper Title (optional)')
                                 ->maxLength(255)
-                                ->placeholder('Enter your paper title (if applicable)'),
+                                ->placeholder('Enter your paper title (if applicable)')
+                                ->helperText('If you are submitting a paper, please provide the title. Otherwise, leave this blank.'),
                         ])
                         ->columns(2),
-                    Forms\Components\Wizard\Step::make('Pilih Seminar Fee')
+                    Forms\Components\Wizard\Step::make('Select Seminar Fee')
                         ->schema([
                             Forms\Components\Select::make('seminar_fee_id')
                                 ->relationship('seminarFee')
@@ -91,13 +95,14 @@ class ParticipantResource extends Resource
                                         ->toArray();
                                 })
                                 ->searchable()
-                                ->placeholder('Pilih seminar fee'),
+                                ->placeholder('Select seminar fee')
+                                ->helperText('Choose the seminar fee according to your category and registration status.'),
                             Forms\Components\Placeholder::make('price_info')
-                                ->label('Tipe Harga')
+                                ->label('Price Type')
                                 ->content(function () use ($hasRegistered) {
                                     return $hasRegistered
-                                        ? 'Anda mendapatkan harga Reguler karena sudah pernah mendaftar pada conference.'
-                                        : 'Anda mendapatkan harga Early Bird karena belum pernah mendaftar pada conference.';
+                                        ? 'You are eligible for the Regular price because you have previously registered for this conference.'
+                                        : 'You are eligible for the Early Bird price because you have not registered for this conference before.';
                                 }),
                         ])
                 ])->columnSpanFull()
@@ -106,12 +111,12 @@ class ParticipantResource extends Resource
                             ? null
                             : new \Illuminate\Support\HtmlString(\Illuminate\Support\Facades\Blade::render(
                                 <<<'BLADE'
-                <x-filament::button
-                type="submit"
-                size="sm"
-                >
-                Submit
-                </x-filament::button>
+            <x-filament::button
+            type="submit"
+            size="sm"
+            >
+            Submit
+            </x-filament::button>
             BLADE
                             ))
                     )
@@ -121,45 +126,7 @@ class ParticipantResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nik')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('university')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('participant_code')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('paper_title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('qrcode')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\IconColumn::make('seminar_kit_status')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->columns([]);
     }
 
     public static function getRelations(): array

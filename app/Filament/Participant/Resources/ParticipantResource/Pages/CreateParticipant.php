@@ -125,8 +125,8 @@ class CreateParticipant extends CreateRecord
 
             // notifikasi sukses
             \Filament\Notifications\Notification::make()
-                ->title('Participant and Payment Created Successfully')
-                ->body('Participant and associated payment have been created successfully. You can proceed to payment.')
+                ->title('Registration Successful, Proceed to Payment')
+                ->body('Participant and payment have been created. The next step is to complete your payment.')
                 ->success()
                 ->persistent()
                 ->send();
