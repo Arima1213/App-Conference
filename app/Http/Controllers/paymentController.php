@@ -6,5 +6,31 @@ use Illuminate\Http\Request;
 
 class paymentController extends Controller
 {
-    //
+    // fungsi pay
+    public function pay(Request $request)
+    {
+        // Ambil dan dekripsi payment id dari request
+        $encryptedPaymentId = $request->input('payment');
+        $paymentId = decrypt($encryptedPaymentId);
+
+        // Ambil invoice_code dari payment id
+        $payment = \App\Models\Payment::find($paymentId);
+
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = env('APP_ENV') === 'production';
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $payment ? $payment->invoice_code : null,
+                'gross_amount' => $payment ? $payment->amount : null,
+            ],
+            'customer_details' => [
+                'first_name' => $payment ? $payment->participant->user->name : '',
+                'email' => $payment ? $payment->participant->user->email : '',
+                'phone' => $payment ? $payment->participant->phone : '',
+            ],
+        ];
+    }
 }

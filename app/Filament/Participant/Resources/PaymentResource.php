@@ -81,8 +81,7 @@ class PaymentResource extends Resource
                 Tables\Actions\Action::make('pay')
                     ->label('Pay')
                     ->url(fn(Payment $record) => route('payment.pay', [
-                        'payment' =>
-                        $record->id,
+                        'payment' => encrypt($record->id),
                         'participant' => $record->participant_id,
                     ]))
                     ->icon('heroicon-o-credit-card')

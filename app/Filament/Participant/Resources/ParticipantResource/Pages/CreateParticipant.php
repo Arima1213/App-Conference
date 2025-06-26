@@ -120,7 +120,7 @@ class CreateParticipant extends CreateRecord
                 $payment->amount = 0;
             }
             $payment->payment_status = 'pending';
-            // $payment->invoice_code = 'INV-' . strtoupper(uniqid());
+            $payment->invoice_code = 'INV-' . strtoupper(uniqid());
             $payment->save();
 
             // notifikasi sukses
