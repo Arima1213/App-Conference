@@ -10,7 +10,7 @@ class Participant extends Model
         'user_id',
         'conference_id',
         'nik',
-        'university',
+        'educational_institution_id',
         'phone',
         'participant_code',
         'paper_title',
@@ -31,5 +31,10 @@ class Participant extends Model
     public function conference()
     {
         return $this->belongsTo(Conference::class);
+    }
+
+    public function educationalInstitution()
+    {
+        return $this->belongsTo(EducationalInstitution::class);
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Filament\Participant\Resources\RegisterConferenceeWidgetResource\Widgets;
 
 use App\Models\Conference;
+use App\Models\Participant;
 use Filament\Widgets\Widget;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
 class RegisterConferenceeWidget extends Widget
@@ -12,8 +14,8 @@ class RegisterConferenceeWidget extends Widget
 
     public ?Conference $conference = null;
     public ?string $encryptedConferenceId = null;
+    public bool $isRegistered = false;
     protected int | string | array $columnSpan = 2; // lebar penuh
-
 
     public function mount(): void
     {
@@ -27,6 +29,13 @@ class RegisterConferenceeWidget extends Widget
         $this->encryptedConferenceId = $this->conference
             ? Crypt::encryptString($this->conference->id)
             : null;
+
+        // Cek apakah user sudah terdaftar di conference ini
+        if ($this->conference && Auth::check()) {
+            $this->isRegistered = Participant::where('user_id', Auth::id())
+                ->where('conference_id', $this->conference->id)
+                ->exists();
+        }
     }
 
     public static function canView(): bool
