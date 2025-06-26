@@ -13,6 +13,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Form;
+use App\Exports\EducationalInstitutionExport;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Filament\Notifications\Notification;
 
 class ListEducationalInstitutions extends ListRecords
@@ -50,6 +52,18 @@ class ListEducationalInstitutions extends ListRecords
                 })
                 ->modalHeading('Import Educational Institutions')
                 ->modalSubmitActionLabel('Import')
+                ->modalCancelActionLabel('Cancel'),
+            Action::make('exportExcel')
+                ->label('Export to Excel')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->action(function (): BinaryFileResponse {
+                    $fileName = 'educational_institutions_' . now()->format('Ymd_His') . '.xlsx';
+                    return Excel::download(new EducationalInstitutionExport, $fileName);
+                })
+                ->requiresConfirmation()
+                ->modalHeading('Export Confirmation')
+                ->modalDescription('Are you sure you want to export all educational institutions to Excel?')
+                ->modalSubmitActionLabel('Export')
                 ->modalCancelActionLabel('Cancel'),
             Action::make('viewTemplate')
                 ->label('View Excel Template')
