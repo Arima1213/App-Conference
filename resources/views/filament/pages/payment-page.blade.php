@@ -58,28 +58,13 @@
 			document.getElementById('pay-button').addEventListener('click', function() {
 				snap.pay('{{ $snapToken }}', {
 					onSuccess: function(result) {
-						fetch("{{ route('payment.success') }}", {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-									"X-CSRF-TOKEN": "{{ csrf_token() }}"
-								},
-								body: JSON.stringify(result)
-							})
-							.then(response => response.json())
-							.then(data => {
-								Swal.fire({
-									icon: 'success',
-									title: 'Pembayaran Berhasil',
-									text: 'Terima kasih, pembayaran Anda berhasil.',
-									confirmButtonText: 'OK'
-								}).then(() => {
-									window.location.href = "{{ url('/participant') }}";
-								});
-							})
-							.catch(error => {
-								console.error("Gagal menyimpan pembayaran", error);
-							});
+						Swal.fire({
+							icon: 'success',
+							title: 'Pembayaran Berhasil',
+							text: 'Terima kasih, pembayaran Anda berhasil.',
+							confirmButtonText: 'OK'
+						});
+						console.log('Success:', result);
 					},
 					onPending: function(result) {
 						Swal.fire({
