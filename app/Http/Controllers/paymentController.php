@@ -44,8 +44,19 @@ class paymentController extends Controller
         ]);
     }
 
-    public function handleSuccess(Request $request)
+    public function callback(Request $request)
     {
+        $serverKey = config('midtrans.server_key');
+        $signatureKey = hash('sha512', $request->input('order_id') .
+            $request->input('status_code') .
+            $request->input('gross_amount') .
+            $serverKey);
+
+        $requestSignature = $request->input('signature_key');
+
+        dd($signatureKey, $requestSignature);
+
+
         $data = $request->all();
 
         // Cari berdasarkan order_id (invoice_code)
