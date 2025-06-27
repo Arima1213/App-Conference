@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentSuccessMail;
+use App\Models\Payment;
+use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class paymentController extends Controller
 {
@@ -38,5 +42,30 @@ class paymentController extends Controller
             'snapToken' => $snapToken,
             'payment' => $payment,
         ]);
+    }
+
+    public function handleSuccess(Request $request)
+    {
+        $data = $request->all();
+
+        // Cari berdasarkan order_id (invoice_code)
+        $payment = Payment::where('invoice_code', $data['order_id'])->firstOrFail();
+
+        // Update status
+        $payment->status = 'paid';
+        $payment->paid_at = now();
+        $payment->save();
+
+        // Kirim notifikasi
+        Notification::make()
+            ->title('Pembayaran berhasil')
+            ->body('Terima kasih, pembayaran Anda telah dikonfirmasi.')
+            ->success()
+            ->sendToDatabase($payment->participant->user);
+
+        // Kirim email
+        Mail::to($payment->participant->user->email)->send(new PaymentSuccessMail($payment));
+
+        return response()->json(['message' => 'Pembayaran berhasil diproses']);
     }
 }
