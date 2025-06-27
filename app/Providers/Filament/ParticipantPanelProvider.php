@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Participant\Resources\ConferenceBannerWidgetResource\Widgets\ConferenceBannerWidget;
+use App\Filament\Participant\Pages\PaymentPage;
 use App\Filament\Participant\Resources\ParticipantProfileWidgetResource\Widgets\ParticipantProfileWidget;
 use App\Filament\Participant\Resources\RegisterConferenceeWidgetResource\Widgets\RegisterConferenceeWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -44,6 +44,7 @@ class ParticipantPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Participant/Pages'), for: 'App\\Filament\\Participant\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                PaymentPage::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Participant/Widgets'), for: 'App\\Filament\\Participant\\Widgets')
             ->widgets([

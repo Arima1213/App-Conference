@@ -32,5 +32,11 @@ class paymentController extends Controller
                 'phone' => $payment ? $payment->participant->phone : '',
             ],
         ];
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        return view('payment.pay', [
+            'snapToken' => $snapToken,
+            'payment' => $payment,
+        ]);
     }
 }

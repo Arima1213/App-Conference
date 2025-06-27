@@ -80,9 +80,10 @@ class PaymentResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('pay')
                     ->label('Pay')
-                    ->url(fn(Payment $record) => route('payment.pay', [
+                    ->url(fn(Payment $record) => route('filament.participant.pages.payment-page', [
                         'payment' => encrypt($record->id),
                         'participant' => $record->participant_id,
+
                     ]))
                     ->icon('heroicon-o-credit-card')
                     ->openUrlInNewTab(),
