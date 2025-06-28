@@ -20,23 +20,13 @@
 			<div class="header-nav-cover">
 				<nav class="nav-menu menu">
 					<ul class="nav-list">
-						<li><a href=".s-conference-slider">Conference</a></li>
-						<li><a href="#about">about</a></li>
-						<li><a href="#our-speaker">our speaker</a></li>
-						<li><a href="#schedule">schedule</a></li>
-						<li><a href="#pricing">pricing</a></li>
-						<li><a href="#location">location</a></li>
-						<li><a href="#sponsors">sponsors</a></li>
-
-						{{-- <li class="dropdown">
-							<a href="#">pages <i class="fa fa-angle-down" aria-hidden="true"></i></a>
-							<ul>
-								<li><a href="conference-team.html">Conference Team</a></li>
-								<li><a href="dance-team.html">Dance Teame</a></li>
-								<li><a href="blog.html">Blog</a></li>
-								<li><a href="page-error.html">Page Error 404</a></li>
-							</ul>
-						</li> --}}
+						<li><a class="nav-link" href=".s-conference-slider">Conference</a></li>
+						<li><a class="nav-link" href="#about">about</a></li>
+						<li><a class="nav-link" href="#our-speaker">our speaker</a></li>
+						<li><a class="nav-link" href="#schedule">schedule</a></li>
+						<li><a class="nav-link" href="#pricing">pricing</a></li>
+						<li><a class="nav-link" href="#location">location</a></li>
+						<li><a class="nav-link" href="#sponsors">sponsors</a></li>
 					</ul>
 				</nav>
 				<a href="{{ url('/participant') }}" class="btn btn-white"><span>Register Now</span></a>
