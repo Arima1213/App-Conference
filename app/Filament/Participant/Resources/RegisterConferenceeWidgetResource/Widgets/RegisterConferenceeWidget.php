@@ -45,21 +45,21 @@ class RegisterConferenceeWidget extends Widget
         }
     }
 
-    public static function canView(): bool
-    {
-        // Tampilkan hanya jika ada conference aktif dan user belum terdaftar
-        $conference = Conference::where('is_active', true)
-            ->whereHas('schedules')
-            ->first();
+    // public static function canView(): bool
+    // {
+    //     // Tampilkan hanya jika ada conference aktif dan user belum terdaftar
+    //     $conference = Conference::where('is_active', true)
+    //         ->whereHas('schedules')
+    //         ->first();
 
-        if (!$conference || !Auth::check()) {
-            return false;
-        }
+    //     if (!$conference || !Auth::check()) {
+    //         return false;
+    //     }
 
-        $isRegistered = Participant::where('user_id', Auth::id())
-            ->where('conference_id', $conference->id)
-            ->exists();
+    //     $isRegistered = Participant::where('user_id', Auth::id())
+    //         ->where('conference_id', $conference->id)
+    //         ->exists();
 
-        return !$isRegistered;
-    }
+    //     return !$isRegistered;
+    // }
 }

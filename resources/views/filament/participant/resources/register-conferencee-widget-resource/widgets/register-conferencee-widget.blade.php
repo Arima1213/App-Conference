@@ -36,6 +36,21 @@
 			background: #d97706;
 		}
 
+		.registered-btn {
+			display: inline-block;
+			background: #22c55e;
+			color: #fff;
+			padding: 0.75rem 2rem;
+			border-radius: 0.5rem;
+			font-weight: 600;
+			font-size: 1.125rem;
+			text-decoration: none;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+			margin-top: 1.5rem;
+			cursor: default;
+			opacity: 0.85;
+		}
+
 		@media (max-width: 900px) {
 			.conference-image-col {
 				max-width: 220px;
@@ -81,7 +96,9 @@
 							Register Now
 						</a>
 					@else
-						<div class="mt-4 font-semibold text-green-600">You are already registered for this conference.</div>
+						<a class="registered-btn">
+							Registered
+						</a>
 					@endif
 				</div>
 			</div>
