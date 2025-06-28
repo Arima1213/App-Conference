@@ -8,14 +8,16 @@
 
 						<div class="space-y-2 py-1">
 							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">Participant Code: <code>{{ $participant->participant_code }}</code></p>
-							<p><strong>Seminar Kit:</strong>
+							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">
+								<strong>Seminar Kit:</strong>
 								@if ($participant->seminar_kit_status)
 									<span class="text-green-500">Taken</span>
 								@else
 									<span class="text-gray-500">Not Yet</span>
 								@endif
 							</p>
-							<p><strong>Status:</strong>
+							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">
+								<strong>Status:</strong>
 								@if ($participant->status === 'verified')
 									<span class="font-semibold text-green-600">Verified</span>
 								@elseif($participant->status === 'arrived')
