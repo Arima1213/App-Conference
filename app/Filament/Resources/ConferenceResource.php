@@ -369,6 +369,24 @@ class ConferenceResource extends Resource
                     ->label('Details'),
                 Tables\Actions\EditAction::make()
                     ->label('Edit'),
+                Tables\Actions\Action::make('activate')
+                    ->label('Activate')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn($record) => !$record->is_active)
+                    ->action(function ($record) {
+                        $record->is_active = true;
+                        $record->save();
+                    }),
+                Tables\Actions\Action::make('deactivate')
+                    ->label('Deactivate')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->visible(fn($record) => $record->is_active)
+                    ->action(function ($record) {
+                        $record->is_active = false;
+                        $record->save();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
