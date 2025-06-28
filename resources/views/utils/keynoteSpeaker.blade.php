@@ -7,14 +7,18 @@
 					<div class="slide-our-speaker">
 						<div class="our-speaker-item">
 							<img src="{{ $speaker->photo ? asset('storage/' . $speaker->photo) : asset('assets/img/placeholder-all.png') }}" alt="{{ $speaker->name }}">
-							<div class="speaker-item-info" @if ($speaker->is_keynote) style="background-color: #FFD700;" @endif>
+							<div class="speaker-item-info"
+								@if ($speaker->is_keynote) style="background-color: #FFC300; padding-top: 0.3rem; padding-bottom: 0.3rem;" @else style="padding-top: 0.3rem; padding-bottom: 0.3rem;" @endif>
 								@if ($speaker->is_keynote)
-									<span title="Keynote Speaker" class="text-warning" style="font-size: 1.2rem;">Keynote</span>
+									<span title="Keynote Speaker" class="text-warning" style="font-size: 0.9rem;">Keynote</span>
 								@endif
-								<h3 class="name">
+								<h3 class="name" style="font-size: 1rem;">
 									{{ $speaker->name }}
 								</h3>
-								<p class="prof">{{ \Illuminate\Support\Str::limit($speaker->position ?? '-', 30) }}</p>
+								<p class="prof"
+									style="font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">
+									{{ $speaker->position ?? '-' }}
+								</p>
 							</div>
 						</div>
 					</div>
