@@ -29,6 +29,6 @@ class Payment extends Model
 
     public function seminarFee()
     {
-        return $this->belongsTo(SeminarFee::class, 'seminar_fee_id');
+        return $this->belongsTo(SeminarFee::class);
     }
 }

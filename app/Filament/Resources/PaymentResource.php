@@ -77,11 +77,11 @@ class PaymentResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('seminarFee.name')
+                Tables\Columns\TextColumn::make('seminarFee.category')
                     ->label('Seminar Fee')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('participant.name')
+                Tables\Columns\TextColumn::make('participant.user.name')
                     ->label('Participant')
                     ->sortable()
                     ->searchable(),
@@ -96,9 +96,16 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('paid_at')
                     ->label('Paid At')
                     ->dateTime('Y-m-d H:i')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_status')
                     ->label('Payment Status')
+                    ->badge()
+                    ->colors([
+                        'secondary' => 'pending',
+                        'success' => 'paid',
+                        'danger' => 'failed',
+                    ])
                     ->formatStateUsing(function ($state) {
                         return match ($state) {
                             'pending' => 'Pending',
@@ -110,10 +117,12 @@ class PaymentResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->label('Payment Method')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('va_number')
                     ->label('Virtual Account Number')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime('Y-m-d H:i')
