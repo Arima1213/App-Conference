@@ -33,10 +33,12 @@ class ParticipantResource extends Resource
                     ->label('NIK')
                     ->maxLength(255)
                     ->placeholder('Enter National Identification Number'),
-                Forms\Components\TextInput::make('university')
+                Forms\Components\Select::make('educational_institution_id')
                     ->label('University')
-                    ->maxLength(255)
-                    ->placeholder('Enter university name'),
+                    ->relationship('educationalInstitution', 'nama_pt')
+                    ->searchable()
+                    ->required()
+                    ->placeholder('Select university'),
                 Forms\Components\TextInput::make('phone')
                     ->label('Phone Number')
                     ->tel()
@@ -53,18 +55,6 @@ class ParticipantResource extends Resource
                     ->label('Paper Title')
                     ->maxLength(255)
                     ->placeholder('Enter paper title (if any)'),
-                Forms\Components\Select::make('status')
-                    ->label('Status')
-                    ->required()
-                    ->options([
-                        'unverified' => 'Unverified',
-                        'verified' => 'Verified',
-                        'arrived' => 'Arrived',
-                    ])
-                    ->default('unverified'),
-                Forms\Components\Toggle::make('seminar_kit_status')
-                    ->label('Seminar Kit Received')
-                    ->required(),
             ])
             ->columns(2);
     }
@@ -80,17 +70,19 @@ class ParticipantResource extends Resource
                 Tables\Columns\TextColumn::make('nik')
                     ->label('NIK')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('university')
+                Tables\Columns\TextColumn::make('educationalInstitution.nama_pt')
                     ->label('University')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Phone Number')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('participant_code')
                     ->label('Participant Code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('paper_title')
                     ->label('Paper Title')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
@@ -101,9 +93,14 @@ class ParticipantResource extends Resource
                         'primary' => 'arrived',
                     ])
                     ->sortable(),
-                Tables\Columns\IconColumn::make('seminar_kit_status')
-                    ->label('Seminar Kit Received')
-                    ->boolean()
+                Tables\Columns\TextColumn::make('seminar_kit_status')
+                    ->label('Seminar Kit')
+                    ->badge()
+                    ->formatStateUsing(fn($state) => $state ? 'Received' : 'Unreceived')
+                    ->colors([
+                        'success' => true,
+                        'secondary' => false,
+                    ])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
@@ -127,17 +124,27 @@ class ParticipantResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('arrived')
-                    ->label('Arrived')
-                    ->icon('heroicon-o-user-group')
-                    ->color('primary')
-                    ->visible(fn($record) => $record->status === 'verified')
-                    ->action(function ($record) {
-                        $record->status = 'arrived';
-                        $record->save();
-                    }),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\Action::make('arrived')
+                        ->label('Arrived')
+                        ->icon('heroicon-o-user-group')
+                        ->color('primary')
+                        ->visible(fn($record) => $record->status === 'verified')
+                        ->action(function ($record) {
+                            $record->status = 'arrived';
+                            $record->save();
+                        }),
+                    Tables\Actions\Action::make('toggle_seminar_kit')
+                        ->label(fn($record) => $record->seminar_kit_status ? 'Mark as Not Received' : 'Mark as Received')
+                        ->icon(fn($record) => $record->seminar_kit_status ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
+                        ->color(fn($record) => $record->seminar_kit_status ? 'danger' : 'success')
+                        ->action(function ($record) {
+                            $record->seminar_kit_status = !$record->seminar_kit_status;
+                            $record->save();
+                        }),
+                ])->label('More Actions')->icon('heroicon-o-ellipsis-horizontal'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
