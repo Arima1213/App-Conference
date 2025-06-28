@@ -18,6 +18,12 @@ class CreateParticipant extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
+        $participant = $this->getRecord();
+        if ($participant && $participant->payment) {
+            // Redirect ke halaman payment detail
+            return route('filament.participant.resources.payments.view', ['record' => $participant->payment->id]);
+        }
+        // Fallback jika payment tidak ditemukan
         return ParticipantResource::getUrl('index');
     }
 
@@ -130,8 +136,6 @@ class CreateParticipant extends CreateRecord
                 ->success()
                 ->persistent()
                 ->send();
-
-            $this->redirect('/participant/payments');
         } else {
             \Filament\Notifications\Notification::make()
                 ->title('Failed to create participant or payment.')
@@ -139,7 +143,6 @@ class CreateParticipant extends CreateRecord
                 ->danger()
                 ->persistent()
                 ->send();
-            $this->redirect('/participant');
         }
     }
 }
