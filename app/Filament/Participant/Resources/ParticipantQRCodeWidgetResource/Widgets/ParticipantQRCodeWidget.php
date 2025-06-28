@@ -11,7 +11,10 @@ class ParticipantQRCodeWidget extends Widget
 {
     protected static string $view = 'filament.participant.resources.participant-q-r-code-widget-resource.widgets.participant-q-r-code-widget';
     protected static ?int $sort = 1; // urutan di dashboard
-    protected int | string | array $columnSpan = 1; // lebar penuh
+    protected int | string | array $columnSpan = [
+        'md' => 1, // lebar penuh di desktop/tablet
+        'default' => 2, // lebar 2 kolom di mobile
+    ];
     public ?string $qrCodeUrl = null;
     public ?Participant $participant = null;
 

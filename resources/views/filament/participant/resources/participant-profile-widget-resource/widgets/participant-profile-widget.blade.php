@@ -4,41 +4,27 @@
 			<div class="my-auto w-full flex-1">
 				@if ($participant)
 					<div class="flex h-full flex-col justify-center space-y-4 md:h-[350px] md:items-start md:justify-center">
-						<h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Welcome, {{ auth()->user()->name }}</h2>
+						<h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Welcome, {{ auth()->user()->name }}</h2>
 
 						<div class="space-y-2 py-1">
-							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">NIK: {{ $participant->nik ?? '-' }}</p>
-							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">University: {{ $participant->university ?? '-' }}</p>
-							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">Phone: {{ $participant->phone }}</p>
-							{{-- <p class="my-1 text-sm text-gray-700 dark:text-gray-200">Participant Code: <code>{{ $participant->participant_code }}</code></p> --}}
-							<p class="my-1 text-sm text-gray-700 dark:text-gray-200">Paper Title: {{ $participant->paper_title ?? '-' }}</p>
+							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">NIK:</span> {{ $participant->nik ?? '-' }}</p>
+							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">University:</span> {{ $participant->university ?? '-' }}</p>
+							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">Phone:</span> {{ $participant->phone ?? '-' }}</p>
+							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">Paper Title:</span> {{ $participant->paper_title ?? '-' }}
+							</p>
 						</div>
-						{{-- <p><strong>Status:</strong>
-                            @if ($participant->status === 'verified')
-                                <span class="font-semibold text-green-600">Verified</span>
-                            @elseif($participant->status === 'arrived')
-                                <span class="font-semibold text-blue-600">Arrived</span>
-                            @else
-                                <span class="font-semibold text-yellow-600">Unverified</span>
-                            @endif
-                        </p> --}}
-						{{-- <p><strong>Seminar Kit:</strong>
-                            {!! $participant->seminar_kit_status ? '<span class="text-green-500">Taken</span>' : '<span class="text-gray-500">Not Yet</span>' !!}
-                        </p> --}}
 
 						<div class="flex items-center space-x-2">
-							<a href=""
-								style="display: inline-flex; align-items: center; border-radius: 0.375rem; background-color: #2563eb; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: #fff; text-decoration: none; transition: background 0.2s; outline: none; border: none;"
-								onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'"
-								onfocus="this.style.boxShadow='0 0 0 2px #3b82f6, 0 0 0 4px #fff'" onblur="this.style.boxShadow='none'">
+							<a href="#"
+								class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
 								Edit Profile
 							</a>
 						</div>
 					</div>
 				@else
 					<div class="text-center">
-						<h2 class="text-lg font-bold text-gray-700">Anda belum mendaftar di conference.</h2>
-						<p class="mt-2 text-sm text-gray-500">Silakan mendaftar untuk mengikuti conference.</p>
+						<h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">You have not registered for the conference.</h2>
+						<p class="mt-2 text-base text-gray-500 dark:text-gray-400">Please register to participate in the conference.</p>
 					</div>
 				@endif
 			</div>
