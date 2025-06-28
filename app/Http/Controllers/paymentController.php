@@ -134,7 +134,7 @@ class paymentController extends Controller
                 ->danger()
                 ->sendToDatabase($payment->participant->user);
         }
-
         return response()->json(['message' => 'Callback processed', 'status' => $payment->payment_status]);
+        return redirect()->url('/participant');
     }
 }
