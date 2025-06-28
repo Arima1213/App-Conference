@@ -11,7 +11,7 @@ class ParticipantProfileWidget extends Widget
     protected static string $view = 'filament.participant.resources.participant-profile-widget-resource.widgets.participant-profile-widget';
 
     protected static ?int $sort = 1; // urutan di dashboard
-    protected int | string | array $columnSpan = 2; // lebar penuh
+    protected int | string | array $columnSpan = 1; // lebar penuh
 
     public function getViewData(): array
     {
