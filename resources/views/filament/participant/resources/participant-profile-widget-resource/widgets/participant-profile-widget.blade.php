@@ -8,7 +8,8 @@
 
 						<div class="space-y-2 py-1">
 							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">NIK:</span> {{ $participant->nik ?? '-' }}</p>
-							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">University:</span> {{ $participant->university ?? '-' }}</p>
+							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">University:</span>
+								{{ $participant->educationalInstitution->nama_pt ?? '-' }}</p>
 							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">Phone:</span> {{ $participant->phone ?? '-' }}</p>
 							<p class="my-1 text-base text-gray-700 dark:text-gray-200"><span class="font-medium">Paper Title:</span> {{ $participant->paper_title ?? '-' }}
 							</p>
@@ -16,7 +17,20 @@
 
 						<div class="flex items-center space-x-2">
 							<a href="#"
-								class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+								style="
+                                    display: inline-flex;
+                                    align-items: center;
+                                    border-radius: 0.375rem;
+                                    background-color: #2563eb;
+                                    padding: 0.5rem 1rem;
+                                    font-size: 0.875rem;
+                                    font-weight: 500;
+                                    color: #fff;
+                                    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+                                    transition: background-color 0.2s;
+                                    text-decoration: none;
+                                "
+								onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
 								Edit Profile
 							</a>
 						</div>
