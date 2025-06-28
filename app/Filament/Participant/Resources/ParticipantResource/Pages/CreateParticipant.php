@@ -21,7 +21,7 @@ class CreateParticipant extends CreateRecord
         $participant = $this->getRecord();
 
         // Redirect ke halaman payment detail
-        return url('/participant/payment');
+        return url('/participant/payments');
     }
 
     protected function getCreatedNotificationTitle(): ?string
