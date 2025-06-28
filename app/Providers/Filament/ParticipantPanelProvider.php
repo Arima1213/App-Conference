@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Participant\Pages\PaymentPage;
 use App\Filament\Participant\Resources\ParticipantProfileWidgetResource\Widgets\ParticipantProfileWidget;
+use App\Filament\Participant\Resources\ParticipantQRCodeWidgetResource\Widgets\ParticipantQRCodeWidget;
 use App\Filament\Participant\Resources\RegisterConferenceeWidgetResource\Widgets\RegisterConferenceeWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -50,6 +51,7 @@ class ParticipantPanelProvider extends PanelProvider
             ->widgets([
                 RegisterConferenceeWidget::class,
                 ParticipantProfileWidget::class,
+                ParticipantQRCodeWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
