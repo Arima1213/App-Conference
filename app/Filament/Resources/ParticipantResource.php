@@ -165,8 +165,6 @@ class ParticipantResource extends Resource
     {
         return [
             'index' => Pages\ListParticipants::route('/'),
-            'create' => Pages\CreateParticipant::route('/create'),
-            'edit' => Pages\EditParticipant::route('/{record}/edit'),
         ];
     }
 }
