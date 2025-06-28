@@ -88,7 +88,7 @@ class ParticipantResource extends Resource
                     ->label('Status')
                     ->badge()
                     ->colors([
-                        'secondary' => 'unverified',
+                        'danger' => 'unverified',
                         'success' => 'verified',
                         'primary' => 'arrived',
                     ])
@@ -99,7 +99,7 @@ class ParticipantResource extends Resource
                     ->formatStateUsing(fn($state) => $state ? 'Received' : 'Unreceived')
                     ->colors([
                         'success' => true,
-                        'secondary' => false,
+                        'danger' => false,
                     ])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

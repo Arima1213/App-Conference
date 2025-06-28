@@ -19,12 +19,9 @@ class CreateParticipant extends CreateRecord
     protected function getRedirectUrl(): string
     {
         $participant = $this->getRecord();
-        if ($participant && $participant->payment) {
-            // Redirect ke halaman payment detail
-            return route('filament.participant.resources.payments.view', ['record' => $participant->payment->id]);
-        }
-        // Fallback jika payment tidak ditemukan
-        return ParticipantResource::getUrl('index');
+
+        // Redirect ke halaman payment detail
+        return url('/participant/payment');
     }
 
     protected function getCreatedNotificationTitle(): ?string
