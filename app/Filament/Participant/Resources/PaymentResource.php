@@ -54,6 +54,10 @@ class PaymentResource extends Resource
                     ->label('Conference Title')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('participant.user.name')
+                    ->label('Participant Name')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('invoice_code')
                     ->label('Invoice Code')
                     ->default('-')
@@ -73,8 +77,9 @@ class PaymentResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('current_user')
-                    ->query(fn(Builder $query) => $query->where('participant_id', Auth::user()->id))
-                    ->hidden()
+                    ->query(fn(Builder $query) => $query->whereHas('participant', function ($q) {
+                        $q->where('user_id', Auth::id());
+                    }))
                     ->default(true),
             ])
             ->actions([
@@ -101,8 +106,6 @@ class PaymentResource extends Resource
     {
         return [
             'index' => Pages\ListPayments::route('/'),
-            'create' => Pages\CreatePayment::route('/create'),
-            'edit' => Pages\EditPayment::route('/{record}/edit'),
         ];
     }
 }

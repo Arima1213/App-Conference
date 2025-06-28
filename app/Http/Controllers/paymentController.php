@@ -47,36 +47,88 @@ class paymentController extends Controller
     public function callback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
-        $signatureKey = hash('sha512', $request->input('order_id') .
-            $request->input('status_code') .
-            $request->input('gross_amount') .
-            $serverKey);
-
+        $orderId = $request->input('order_id');
+        $statusCode = $request->input('status_code');
+        $grossAmount = $request->input('gross_amount');
         $requestSignature = $request->input('signature_key');
 
-        dd($signatureKey, $requestSignature);
+        // Validate required fields
+        if (!$orderId || !$statusCode || !$grossAmount || !$requestSignature) {
+            return response()->json(['message' => 'Missing required parameters'], 400);
+        }
 
+        // Generate signature
+        $signatureKey = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
 
-        $data = $request->all();
+        // Verify signature
+        if ($signatureKey !== $requestSignature) {
+            return response()->json(['message' => 'Invalid signature'], 403);
+        }
 
-        // Cari berdasarkan order_id (invoice_code)
-        $payment = Payment::where('invoice_code', $data['order_id'])->firstOrFail();
+        // Find payment by order_id (invoice_code)
+        $payment = Payment::where('invoice_code', $orderId)->first();
 
-        // Update status
-        $payment->status = 'paid';
-        $payment->paid_at = now();
+        if (!$payment) {
+            return response()->json(['message' => 'Payment not found'], 404);
+        }
+
+        // Handle different transaction statuses
+        $transactionStatus = $request->input('transaction_status');
+        $fraudStatus = $request->input('fraud_status');
+
+        switch ($transactionStatus) {
+            case 'capture':
+                if ($request->input('payment_type') == 'credit_card') {
+                    if ($fraudStatus == 'challenge') {
+                        $payment->payment_status = 'challenge';
+                    } else {
+                        $payment->payment_status = 'paid';
+                        $payment->paid_at = now();
+                    }
+                }
+                break;
+            case 'settlement':
+                $payment->payment_status = 'paid';
+                $payment->paid_at = now();
+                break;
+            case 'pending':
+                $payment->payment_status = 'pending';
+                break;
+            case 'deny':
+            case 'expire':
+            case 'cancel':
+                $payment->payment_status = $transactionStatus;
+                break;
+            default:
+                $payment->payment_status = 'unknown';
+        }
+
+        // Update additional fields
+        $payment->payment_method = $request->input('payment_type') ?? null;
+        $payment->va_number = $request->input('va_numbers.0.va_number') ?? $request->input('masked_card') ?? null;
         $payment->save();
 
-        // Kirim notifikasi
-        Notification::make()
-            ->title('Pembayaran berhasil')
-            ->body('Terima kasih, pembayaran Anda telah dikonfirmasi.')
-            ->success()
-            ->sendToDatabase($payment->participant->user);
+        // Send notification only if paid
+        if ($payment->payment_status === 'paid') {
+            Notification::make()
+                ->title('Payment Successful')
+                ->body('Thank you, your payment has been confirmed.')
+                ->success()
+                ->sendToDatabase($payment->participant->user);
+        } elseif ($payment->payment_status === 'challenge') {
+            Notification::make()
+                ->title('Payment Under Verification')
+                ->body('Your payment is under verification by the bank.')
+                ->warning()
+                ->sendToDatabase($payment->participant->user);
+        } elseif (in_array($payment->payment_status, ['deny', 'expire', 'cancel'])) {
+            Notification::make()
+                ->title('Payment Failed')
+                ->body('Your payment has failed. Please try again or contact the administrator.')
+                ->danger()
+                ->sendToDatabase($payment->participant->user);
+        }
 
-        // Kirim email
-        Mail::to($payment->participant->user->email)->send(new PaymentSuccessMail($payment));
-
-        return response()->json(['message' => 'Pembayaran berhasil diproses']);
+        return response()->json(['message' => 'Callback processed', 'status' => $payment->payment_status]);
     }
 }
