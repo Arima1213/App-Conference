@@ -88,10 +88,10 @@ class PaymentResource extends Resource
                     ->url(fn(Payment $record) => route('filament.participant.pages.payment-page', [
                         'payment' => encrypt($record->id),
                         'participant' => $record->participant_id,
-
                     ]))
                     ->icon('heroicon-o-credit-card')
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                    ->visible(fn(Payment $record) => $record->payment_status !== 'paid'),
             ]);
     }
 
