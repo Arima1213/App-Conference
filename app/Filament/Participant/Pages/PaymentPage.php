@@ -11,6 +11,8 @@ class PaymentPage extends Page
     protected static string $view = 'filament.pages.payment-page';
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $title = 'Payment Page';
+    // sembunyikan dari nav
+    protected static bool $shouldRegisterNavigation = false;
 
     public $snapToken;
     public $payment;
