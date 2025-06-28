@@ -76,10 +76,18 @@
 					<div class="conference-description text-gray-700 dark:text-gray-200">
 						{{ $conference->description }}
 					</div>
-					<a href="{{ route('filament.participant.resources.participants.create', ['conference' => $encryptedConferenceId]) }}" class="register-btn">
-						Register Now
-					</a>
+					@if (!$isRegistered)
+						<a href="{{ route('filament.participant.resources.participants.create', ['conference' => $encryptedConferenceId]) }}" class="register-btn">
+							Register Now
+						</a>
+					@else
+						<div class="mt-4 font-semibold text-green-600">You are already registered for this conference.</div>
+					@endif
 				</div>
+			</div>
+		@elseif (!empty($noActiveConferenceMessage))
+			<div class="p-6 text-center text-gray-500 dark:text-gray-400">
+				{{ $noActiveConferenceMessage }}
 			</div>
 		@else
 			<div class="p-6 text-center text-gray-500 dark:text-gray-400">

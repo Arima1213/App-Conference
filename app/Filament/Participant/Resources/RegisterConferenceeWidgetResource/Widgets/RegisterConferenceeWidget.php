@@ -17,6 +17,8 @@ class RegisterConferenceeWidget extends Widget
     public bool $isRegistered = false;
     protected int | string | array $columnSpan = 2; // lebar penuh
 
+    public ?string $noActiveConferenceMessage = null;
+
     public function mount(): void
     {
         $this->conference = Conference::where('is_active', true)
@@ -26,12 +28,17 @@ class RegisterConferenceeWidget extends Widget
             ->sortBy(fn($conf) => optional($conf->schedules->first())->start_time)
             ->first();
 
-        $this->encryptedConferenceId = $this->conference
-            ? Crypt::encryptString($this->conference->id)
-            : null;
+        if (!$this->conference) {
+            $this->noActiveConferenceMessage = 'Tidak ada conference yang aktif saat ini.';
+            $this->encryptedConferenceId = null;
+            $this->isRegistered = false;
+            return;
+        }
+
+        $this->encryptedConferenceId = Crypt::encryptString($this->conference->id);
 
         // Cek apakah user sudah terdaftar di conference ini
-        if ($this->conference && Auth::check()) {
+        if (Auth::check()) {
             $this->isRegistered = Participant::where('user_id', Auth::id())
                 ->where('conference_id', $this->conference->id)
                 ->exists();
@@ -40,7 +47,19 @@ class RegisterConferenceeWidget extends Widget
 
     public static function canView(): bool
     {
-        // Tampilkan hanya jika ada conference aktif
-        return Conference::where('is_active', true)->exists();
+        // Tampilkan hanya jika ada conference aktif dan user belum terdaftar
+        $conference = Conference::where('is_active', true)
+            ->whereHas('schedules')
+            ->first();
+
+        if (!$conference || !Auth::check()) {
+            return false;
+        }
+
+        $isRegistered = Participant::where('user_id', Auth::id())
+            ->where('conference_id', $conference->id)
+            ->exists();
+
+        return !$isRegistered;
     }
 }
