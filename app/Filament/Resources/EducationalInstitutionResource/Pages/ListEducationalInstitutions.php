@@ -26,7 +26,8 @@ class ListEducationalInstitutions extends ListRecords
         return [
             CreateAction::make(),
             Action::make('importExcel')
-                ->label('Import from Excel')
+                ->color('success')
+                ->label('Import')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->form([
                     FileUpload::make('file')
@@ -54,7 +55,8 @@ class ListEducationalInstitutions extends ListRecords
                 ->modalSubmitActionLabel('Import')
                 ->modalCancelActionLabel('Cancel'),
             Action::make('exportExcel')
-                ->label('Export to Excel')
+                ->color('danger')
+                ->label('Export')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function (): BinaryFileResponse {
                     $fileName = 'educational_institutions_' . now()->format('Ymd_His') . '.xlsx';
@@ -66,7 +68,8 @@ class ListEducationalInstitutions extends ListRecords
                 ->modalSubmitActionLabel('Export')
                 ->modalCancelActionLabel('Cancel'),
             Action::make('viewTemplate')
-                ->label('View Excel Template')
+                ->color('info')
+                ->label('Template')
                 ->icon('heroicon-o-document-text')
                 ->modalHeading('Excel Template Format')
                 ->modalSubmitAction(false)
