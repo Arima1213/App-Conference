@@ -53,10 +53,6 @@ class ParticipantResource extends Resource
                     ->label('Paper Title')
                     ->maxLength(255)
                     ->placeholder('Enter paper title (if any)'),
-                Forms\Components\TextInput::make('qrcode')
-                    ->label('QR Code')
-                    ->maxLength(255)
-                    ->placeholder('Enter QR code'),
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->required()
@@ -96,9 +92,6 @@ class ParticipantResource extends Resource
                 Tables\Columns\TextColumn::make('paper_title')
                     ->label('Paper Title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('qrcode')
-                    ->label('QR Code')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -136,6 +129,15 @@ class ParticipantResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('arrived')
+                    ->label('Arrived')
+                    ->icon('heroicon-o-user-group')
+                    ->color('primary')
+                    ->visible(fn($record) => $record->status === 'verified')
+                    ->action(function ($record) {
+                        $record->status = 'arrived';
+                        $record->save();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

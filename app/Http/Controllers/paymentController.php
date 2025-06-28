@@ -81,9 +81,15 @@ class paymentController extends Controller
                 if ($request->input('payment_type') == 'credit_card') {
                     if ($fraudStatus == 'challenge') {
                         $payment->payment_status = 'challenge';
+                        // Update participant status to 'verified'
+                        $payment->participant->status = 'verified';
+                        $payment->participant->save();
                     } else {
                         $payment->payment_status = 'paid';
                         $payment->paid_at = now();
+                        // Update participant status to 'verified'
+                        $payment->participant->status = 'verified';
+                        $payment->participant->save();
                     }
                 }
                 break;
