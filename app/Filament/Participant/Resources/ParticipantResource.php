@@ -3,15 +3,18 @@
 namespace App\Filament\Participant\Resources;
 
 use App\Filament\Participant\Resources\ParticipantResource\Pages;
-use App\Filament\Participant\Resources\ParticipantResource\RelationManagers;
 use App\Models\Conference;
+use App\Models\Membership;
 use App\Models\Participant;
+use App\Models\SeminarFee;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Filament\Notifications\Notification;
 
 class ParticipantResource extends Resource
 {
@@ -24,10 +27,9 @@ class ParticipantResource extends Resource
         $request = request();
         $conferenceId = null;
 
-        // Ambil parameter dari query string, bukan dari request body
         if ($request->query->has('conference')) {
             try {
-                $conferenceId = \Illuminate\Support\Facades\Crypt::decryptString($request->query('conference'));
+                $conferenceId = Crypt::decryptString($request->query('conference'));
             } catch (\Exception) {
                 $conferenceId = null;
             }
@@ -35,7 +37,6 @@ class ParticipantResource extends Resource
 
         $userId = Auth::user()->id;
 
-        // Cek apakah user sudah pernah mendaftar di conference ini
         $hasRegistered = Participant::where('user_id', $userId)
             ->exists();
 
@@ -52,40 +53,31 @@ class ParticipantResource extends Resource
                                 ->label('National Identification Number')
                                 ->numeric()
                                 ->required()
-                                ->maxLength(255)
-                                ->placeholder('Enter your NIK')
-                                ->helperText('Please enter your valid national identification number.'),
+                                ->maxLength(255),
                             Forms\Components\Select::make('educational_institution_id')
                                 ->label('University')
                                 ->required()
                                 ->relationship('educationalInstitution', 'nama_pt')
                                 ->searchable()
-                                ->placeholder('Select your university')
-                                ->preload()
-                                ->helperText('Choose the university you are currently enrolled in or graduated from.'),
+                                ->preload(),
                             Forms\Components\TextInput::make('phone')
                                 ->label('Phone Number')
                                 ->tel()
                                 ->required()
-                                ->maxLength(20)
-                                ->placeholder('Enter your phone number')
-                                ->helperText('Enter an active phone number for contact purposes.'),
+                                ->maxLength(20),
                             Forms\Components\TextInput::make('paper_title')
                                 ->label('Paper Title (optional)')
-                                ->maxLength(255)
-                                ->placeholder('Enter your paper title (if applicable)')
-                                ->helperText('If you are submitting a paper, please provide the title. Otherwise, leave this blank.'),
+                                ->maxLength(255),
                         ])
                         ->columns(2),
+
                     Forms\Components\Wizard\Step::make('Select Seminar Fee')
                         ->schema([
                             Forms\Components\Select::make('seminar_fee_id')
-                                ->relationship('seminarFee')
                                 ->label('Seminar Fee')
                                 ->required()
                                 ->options(function () use ($conferenceId, $hasRegistered) {
-                                    return \App\Models\SeminarFee::query()
-                                        ->where('conference_id', $conferenceId)
+                                    return SeminarFee::where('conference_id', $conferenceId)
                                         ->get()
                                         ->mapWithKeys(function ($fee) use ($hasRegistered) {
                                             $price = $hasRegistered ? $fee->regular_price : $fee->early_bird_price;
@@ -94,16 +86,60 @@ class ParticipantResource extends Resource
                                         })
                                         ->toArray();
                                 })
-                                ->searchable()
-                                ->placeholder('Select seminar fee')
-                                ->helperText('Choose the seminar fee according to your category and registration status.'),
+                                ->reactive()
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    $fee = SeminarFee::find($state);
+                                    $set('is_member_fee', $fee?->is_member);
+                                })
+                                ->searchable(),
+
                             Forms\Components\Placeholder::make('price_info')
                                 ->label('Price Type')
                                 ->content(function () use ($hasRegistered) {
                                     return $hasRegistered
-                                        ? 'You are eligible for the Regular price because you have previously registered for this conference.'
-                                        : 'You are eligible for the Early Bird price because you have not registered for this conference before.';
+                                        ? 'You are eligible for the Regular price.'
+                                        : 'You are eligible for the Early Bird price.';
                                 }),
+
+                            Forms\Components\Hidden::make('is_member_fee')
+                                ->default(false),
+
+                            Forms\Components\Fieldset::make('Membership Verification')
+                                ->visible(fn(callable $get) => $get('is_member_fee'))
+                                ->schema([
+                                    Forms\Components\TextInput::make('membership_number')
+                                        ->label('Membership Number')
+                                        ->maxLength(50)
+                                        ->required(),
+
+                                    Forms\Components\Actions::make([
+                                        Forms\Components\Actions\Action::make('verifyMembership')
+                                            ->label('Verify Membership')
+                                            ->action(function (array $data, callable $set, callable $get) {
+                                                $membership = Membership::where('no_anggota', $data['membership_number'])->first();
+
+                                                if (!$membership) {
+                                                    Notification::make()
+                                                        ->danger()
+                                                        ->title('Membership Not Found')
+                                                        ->body('The provided membership number is not registered.')
+                                                        ->send();
+                                                    $set('membership_id', null);
+                                                    return;
+                                                }
+
+                                                Notification::make()
+                                                    ->success()
+                                                    ->title('Membership Verified')
+                                                    ->body('Membership number is valid.')
+                                                    ->send();
+
+                                                $set('membership_id', $membership->id);
+                                            }),
+                                    ])
+                                ]),
+
+                            Forms\Components\Hidden::make('membership_id'),
                         ])
                 ])->columnSpanFull()
                     ->submitAction(
@@ -131,9 +167,7 @@ class ParticipantResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
