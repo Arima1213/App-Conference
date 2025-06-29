@@ -10,6 +10,7 @@ class Participant extends Model
         'user_id',
         'conference_id',
         'seminar_fee_id',
+        'membership_id',
         'nik',
         'educational_institution_id',
         'phone',
@@ -47,5 +48,10 @@ class Participant extends Model
     public function seminarFee()
     {
         return $this->belongsTo(SeminarFee::class);
+    }
+
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class);
     }
 }

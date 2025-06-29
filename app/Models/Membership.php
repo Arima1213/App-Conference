@@ -13,4 +13,9 @@ class Membership extends Model
         'no_hp',
         'no_anggota',
     ];
+
+    public function participants()
+    {
+        return $this->hasMany(Participant::class);
+    }
 }
