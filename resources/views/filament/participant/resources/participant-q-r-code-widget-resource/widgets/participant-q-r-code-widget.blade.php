@@ -23,11 +23,11 @@
 								<p class="text-base text-gray-700 dark:text-gray-200">
 									<span class="font-medium">Status:</span>
 									@if ($participant->status === 'verified')
-										<span class="font-semibold text-green-600">Verified</span>
+										<span class="font-semibold text-green-600 dark:text-green-400">Verified</span>
 									@elseif($participant->status === 'arrived')
-										<span class="font-semibold text-blue-600">Arrived</span>
+										<span class="font-semibold text-blue-600 dark:text-blue-400">Arrived</span>
 									@else
-										<span class="font-semibold text-yellow-600">Unverified</span>
+										<span class="font-semibold text-yellow-600 dark:text-yellow-400">Unverified</span>
 									@endif
 								</p>
 							</div>
