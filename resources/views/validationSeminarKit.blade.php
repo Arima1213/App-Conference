@@ -36,13 +36,13 @@
 						<strong>NIK:</strong> {{ $participant->nik ?? '-' }} <br>
 						<strong>Paper Title:</strong> {{ $participant->paper_title ?? '-' }} <br>
 						<strong>Seminar Kit Status:</strong>
-						{!! $participant->seminar_kit_status === 'received'
+						{!! $participant->seminar_kit_status
 						    ? '<span class="text-success">Already Collected</span>'
 						    : '<span class="text-danger">Not Yet Collected</span>' !!}
 					</div>
 
 					@if (auth()->check() && filament()->getPanel()->getId() === 'manage')
-						@if ($participant->seminar_kit_status !== 'received')
+						@if (!$participant->seminar_kit_status)
 							<form action="{{ route('participant.qr.seminar-kit.validate', $participant->id) }}" method="POST">
 								@csrf
 								<button type="submit" class="btn btn-success w-100 fw-semibold rounded-pill py-2">
@@ -66,7 +66,7 @@
 		</div>
 	</div>
 
-	{{-- SweetAlert --}}
+	{{-- SweetAlert Feedback --}}
 	@if (session('success'))
 		<script>
 			Swal.fire({

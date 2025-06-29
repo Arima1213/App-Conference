@@ -94,11 +94,11 @@ class AttendanceController extends Controller
                 return redirect()->back()->with('error', 'You do not have permission to validate the seminar kit.');
             }
 
-            if ($participant->seminar_kit_status === 'received') {
+            if ($participant->seminar_kit_status === true) {
                 return redirect()->back()->with('info', 'The seminar kit has already been received.');
             }
 
-            $participant->seminar_kit_status = 'received';
+            $participant->seminar_kit_status = true; // BOOLEAN, bukan string 'received'
             $participant->save();
 
             return redirect()->back()->with('success', 'Participant seminar kit has been successfully validated.');
