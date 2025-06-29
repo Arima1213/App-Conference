@@ -75,7 +75,7 @@ class ListEducationalInstitutions extends ListRecords
                 ->modalSubmitAction(false)
                 ->modalCancelAction(false) // menghilangkan tombol Close, hanya menyisakan icon X
                 ->modalWidth('7xl')
-                ->modalContent(fn() => view('filament.modals.excel-template')),
+                ->modalContent(fn() => view('filament.modals.educational-template')),
         ];
     }
 }

@@ -71,7 +71,7 @@ class ListMemberships extends ListRecords
                 ->modalSubmitAction(false)
                 ->modalCancelAction(false)
                 ->modalWidth('7xl')
-                ->modalContent(fn() => view('filament.modals.membership-excel-template')),
+                ->modalContent(fn() => view('filament.modals.member-template')),
         ];
     }
 }
