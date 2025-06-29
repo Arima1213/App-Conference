@@ -78,35 +78,42 @@ class paymentController extends Controller
 
         switch ($transactionStatus) {
             case 'capture':
+                // Jika pembayaran menggunakan kartu kredit, cek status fraud
                 if ($request->input('payment_type') == 'credit_card') {
                     if ($fraudStatus == 'challenge') {
-                        $payment->payment_status = 'challenge';
-                        // Update participant status to 'verified'
-                        $payment->participant->status = 'verified';
-                        $payment->participant->save();
+                        // Pembayaran perlu verifikasi lebih lanjut oleh bank (fraud challenge)
+                        $payment->payment_status = 'pending'; // status tetap pending sampai verifikasi selesai
                     } else {
+                        // Pembayaran berhasil dan sudah diverifikasi
                         $payment->payment_status = 'paid';
                         $payment->paid_at = now();
-                        // Update participant status to 'verified'
+                        // Update status peserta menjadi 'verified'
                         $payment->participant->status = 'verified';
                         $payment->participant->save();
                     }
                 }
                 break;
             case 'settlement':
+                // Pembayaran berhasil (umumnya untuk transfer bank, e-wallet, dll)
                 $payment->payment_status = 'paid';
                 $payment->paid_at = now();
+                // Update status peserta menjadi 'verified'
+                $payment->participant->status = 'verified';
+                $payment->participant->save();
                 break;
             case 'pending':
+                // Pembayaran masih menunggu (belum dibayar atau menunggu konfirmasi)
                 $payment->payment_status = 'pending';
                 break;
             case 'deny':
             case 'expire':
             case 'cancel':
-                $payment->payment_status = $transactionStatus;
+                // Pembayaran gagal (ditolak, kadaluarsa, atau dibatalkan)
+                $payment->payment_status = 'failed';
                 break;
             default:
-                $payment->payment_status = 'unknown';
+                // Status tidak diketahui, set sebagai pending untuk keamanan
+                $payment->payment_status = 'pending';
         }
 
         // Update additional fields
