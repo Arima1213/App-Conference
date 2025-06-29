@@ -71,7 +71,7 @@ class AttendanceController extends Controller
             $id = Crypt::decryptString($encrypted);
             $participant = Participant::with(['user', 'conference'])->findOrFail($id);
 
-            return view('participant.qr-show-seminar-kit', compact('participant'));
+            return view('validationSeminarKit', compact('participant'));
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             return redirect()->route('home')->with('error', 'The QR code is invalid or has been corrupted.');
         } catch (\Exception $e) {

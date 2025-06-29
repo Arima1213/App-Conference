@@ -4,17 +4,17 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Attendance Validation</title>
+	<title>Seminar Kit Validation</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-	<style>
-		.card-body {
-			font-family: 'Courier New', monospace;
-		}
+	<style></style>
+	.card-body {
+	font-family: 'Courier New', monospace;
+	}
 	</style>
 
 	<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light container py-5">
@@ -34,24 +34,27 @@
 						<strong>Name:</strong> {{ $participant->user->name }} <br>
 						<strong>University:</strong> {{ $participant->educationalInstitution->nama_pt ?? '-' }} <br>
 						<strong>NIK:</strong> {{ $participant->nik ?? '-' }} <br>
-						<strong>Paper:</strong> {{ $participant->paper_title ?? '-' }} <br>
-						<strong>Status:</strong> {!! $participant->status === 'arrived' ? '<span class="text-success">Present</span>' : '<span class="text-danger">Not Present</span>' !!}
+						<strong>Paper Title:</strong> {{ $participant->paper_title ?? '-' }} <br>
+						<strong>Seminar Kit Status:</strong>
+						{!! $participant->seminar_kit_status === 'received'
+						    ? '<span class="text-success">Already Collected</span>'
+						    : '<span class="text-danger">Not Yet Collected</span>' !!}
 					</div>
 
 					@if (auth()->check() && filament()->getPanel()->getId() === 'manage')
-						@if ($participant->status !== 'arrived')
-							<form action="{{ route('participant.qr.validate', $participant->id) }}" method="POST">
+						@if ($participant->seminar_kit_status !== 'received')
+							<form action="{{ route('participant.qr.seminar-kit.validate', $participant->id) }}" method="POST">
 								@csrf
 								<button type="submit" class="btn btn-success w-100 fw-semibold rounded-pill py-2">
-									<i class="bi bi-check-circle me-2"></i> Mark as Present
+									<i class="bi bi-check-circle me-2"></i> Mark as Collected
 								</button>
 							</form>
 						@else
-							<div class="alert alert-success mt-3">The participant has already been marked as present.</div>
+							<div class="alert alert-success mt-3">The participant has collected the seminar kit.</div>
 						@endif
 					@else
 						<div class="alert alert-warning mt-3">
-							Please log in to the <strong>manage</strong> panel to validate attendance.
+							Please log in to the <strong>manage</strong> panel to validate the seminar kit.
 							<br>
 							<a href="{{ url('/manage/login') }}" class="btn btn-primary btn-sm rounded-pill mt-2 px-3">
 								<i class="bi bi-box-arrow-in-right me-1"></i> Login to Manage Panel
@@ -63,6 +66,7 @@
 		</div>
 	</div>
 
+	{{-- SweetAlert --}}
 	@if (session('success'))
 		<script>
 			Swal.fire({
@@ -79,6 +83,16 @@
 				icon: 'error',
 				title: 'Failed',
 				text: '{{ session('error') }}',
+			});
+		</script>
+	@endif
+
+	@if (session('info'))
+		<script>
+			Swal.fire({
+				icon: 'info',
+				title: 'Information',
+				text: '{{ session('info') }}',
 			});
 		</script>
 	@endif
