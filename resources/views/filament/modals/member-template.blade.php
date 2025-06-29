@@ -10,8 +10,8 @@
 	</div>
 
 	<div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-		<table class="min-w-full text-left text-xs">
-			<thead class="bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+		<table class="w-full text-left text-xs">
+			<thead class="bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">
 				<tr>
 					<th class="px-4 py-2">nama_lengkap</th>
 					<th class="px-4 py-2">no_hp</th>
