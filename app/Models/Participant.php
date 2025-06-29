@@ -24,6 +24,11 @@ class Participant extends Model
         'seminar_kit_status' => 'boolean',
     ];
 
+    public function payment()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

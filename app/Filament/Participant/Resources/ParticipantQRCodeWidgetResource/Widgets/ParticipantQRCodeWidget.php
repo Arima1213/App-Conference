@@ -23,13 +23,16 @@ class ParticipantQRCodeWidget extends Widget
         $this->participant = Participant::where('user_id', Auth::id())->latest()->first();
 
         if ($this->participant) {
-            $encrypted = Crypt::encryptString($this->participant->id);
+            $payment = $this->participant->payment()
+                ->where('payment_status', 'paid')
+                ->latest()
+                ->first();
 
-            // Generate QR URL menuju route verifikasi atau tampilan identitas
-            $qrDataUrl = route('participant.qr.show', ['encrypted' => $encrypted]);
-
-            // QR Code dari API
-            $this->qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($qrDataUrl) . '&size=200x200';
+            if ($payment) {
+                $encrypted = Crypt::encryptString($this->participant->id);
+                $qrDataUrl = route('participant.qr.show', ['encrypted' => $encrypted]);
+                $this->qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($qrDataUrl) . '&size=200x200';
+            }
         }
     }
 }
