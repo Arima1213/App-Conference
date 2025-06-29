@@ -35,4 +35,12 @@ class AttendanceController extends Controller
 
         return redirect()->back()->with('success', 'Peserta sudah hadir sebelumnya.');
     }
+
+    public function showSeminarKitQr($encrypted)
+    {
+        $id = Crypt::decryptString($encrypted);
+        $participant = \App\Models\Participant::with('user', 'conference')->findOrFail($id);
+
+        return view('participant.qr-show-seminar-kit', compact('participant'));
+    }
 }
