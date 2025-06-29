@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade');
             $table->enum('type', ['online', 'offline']);
             $table->string('category');
+            $table->boolean('is_member')->default(false);
             $table->decimal('early_bird_price', 10, 2);
             $table->decimal('regular_price', 10, 2);
             $table->timestamps();

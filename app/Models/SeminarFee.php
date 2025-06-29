@@ -9,6 +9,7 @@ class SeminarFee extends Model
     protected $fillable = [
         'conference_id',
         'type',
+        'is_member',
         'category',
         'early_bird_price',
         'regular_price',

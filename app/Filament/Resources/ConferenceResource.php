@@ -220,12 +220,24 @@ class ConferenceResource extends Resource
                                             'Conference | Member' => 'Conference | Member',
                                             'Conference | Non-Member' => 'Conference | Non-Member',
                                             'Deliberation | Member' => 'Deliberation | Member',
-                                            'Deliberation | Non IEEE Member' => 'Deliberation | Non IEEE Member',
+                                            'Deliberation | Non-Member' => 'Deliberation | Non-Member',
                                             'Deliberation & Conference | Member' => 'Deliberation & Conference | Member',
                                             'Deliberation & Conference | Non-Member' => 'Deliberation & Conference | Non-Member',
                                         ])
                                         ->required()
-                                        ->helperText('Choose the participant category for this fee option.'),
+                                        ->helperText('Choose the participant category for this fee option.')
+                                        ->reactive()
+                                        ->afterStateUpdated(function ($state, callable $set) {
+                                            // Aktifkan is_member jika kategori mengandung "Member" (bukan "Non-Member" atau "Non IEEE Member")
+                                            $isMember = false;
+                                            if (
+                                                (str_contains($state, 'Member') && !str_contains($state, 'Non-Member'))
+                                            ) {
+                                                $isMember = true;
+                                            }
+                                            $set('is_member', $isMember);
+                                        }),
+                                    Forms\Components\Hidden::make('is_member'),
                                     Forms\Components\TextInput::make('early_bird_price')
                                         ->label('Early Bird Price')
                                         ->numeric()
