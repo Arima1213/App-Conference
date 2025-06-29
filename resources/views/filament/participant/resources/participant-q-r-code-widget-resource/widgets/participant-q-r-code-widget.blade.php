@@ -12,14 +12,6 @@
 								<code class="rounded bg-gray-100 px-2 py-1 dark:bg-gray-800">{{ $participant->participant_code }}</code>
 							</p>
 							<p class="text-base text-gray-700 dark:text-gray-200">
-								<span class="font-medium">Seminar Kit:</span>
-								@if ($participant->seminar_kit_status)
-									<span class="font-semibold text-green-600">Collected</span>
-								@else
-									<span class="text-gray-500">Not Collected</span>
-								@endif
-							</p>
-							<p class="text-base text-gray-700 dark:text-gray-200">
 								<span class="font-medium">Status:</span>
 								@if ($participant->status === 'verified')
 									<span class="font-semibold text-green-600">Verified</span>
