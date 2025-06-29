@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\DashboardPageResource\Pages;
 
-use Filament\Resources\Pages\Page;
+use Filament\Pages\Dashboard as PagesDashboard;
 use App\Models\Conference;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Forms\Components\Select;
@@ -11,7 +11,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Widgets;
 
-class Dashboard extends Page
+class Dashboard extends PagesDashboard
 {
     protected static string $view = 'filament.resources.dashboard-page-resource.pages.dashboard';
 

@@ -11,6 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
         // Tambahkan pengecualian CSRF di sini
         $middleware->validateCsrfTokens(except: [
             'midtrans-callback', // Tanpa slash di depan
