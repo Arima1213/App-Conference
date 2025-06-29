@@ -29,6 +29,7 @@
 									<span class="font-semibold text-yellow-600">Unverified</span>
 								@endif
 							</p>
+
 						</div>
 						<div class="flex items-center space-x-3">
 							<a href="#"
@@ -65,6 +66,9 @@
 					<img src="{{ asset('svg/Social biography-rafiki.svg') }}" alt="Conference Illustration" class="h-auto w-full max-w-xs">
 				@endif
 			</div>
+		</div>
+		<div class="rounded bg-blue-50 p-3 text-sm text-blue-900 dark:bg-blue-900/30 dark:text-blue-100">
+			<strong>Note:</strong> Show this QR code at check-in. Staff will scan it to confirm your arrival.
 		</div>
 	</x-filament::card>
 </x-filament::widget>
