@@ -22,23 +22,25 @@
 						</div>
 
 						<div class="flex items-center space-x-3">
-							<a href="{{ $qrCodeUrl }}" download="seminar-kit-qr.png"
-								style="
-                                    display: inline-flex;
-                                    align-items: center;
-                                    border-radius: 0.375rem;
-                                    background-color: #2563eb;
-                                    padding: 0.5rem 1rem;
-                                    font-size: 0.875rem;
-                                    font-weight: 500;
-                                    color: #fff;
-                                    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
-                                    transition: background-color 0.2s;
-                                    text-decoration: none;
-                                "
-								onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
-								Download QR Code
-							</a>
+							@if (isset($qrCodeUrl))
+								<a href="{{ $qrCodeUrl }}" download="participant-qr-code.png"
+									style="
+                                        display: inline-flex;
+                                        align-items: center;
+                                        border-radius: 0.375rem;
+                                        background-color: #2563eb;
+                                        padding: 0.5rem 1rem;
+                                        font-size: 0.875rem;
+                                        font-weight: 500;
+                                        color: #fff;
+                                        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+                                        transition: background-color 0.2s;
+                                        text-decoration: none;
+                                    "
+									onmouseover="this.style.backgroundColor='#1d4ed8'" onmouseout="this.style.backgroundColor='#2563eb'">
+									Download QR Code
+								</a>
+							@endif
 						</div>
 					</div>
 				@else
