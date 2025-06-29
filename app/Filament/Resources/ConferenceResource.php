@@ -41,10 +41,10 @@ class ConferenceResource extends Resource
                                 ->image()
                                 ->directory('conference-banners')
                                 ->disk('public')
-                                ->maxSize(2048)
+                                ->maxSize(5120)
                                 ->nullable()
                                 ->label('Banner Image')
-                                ->helperText('Upload a banner image for the conference (max 2MB).')
+                                ->helperText('Upload a banner image for the conference (max 5MB).')
                                 ->columnSpanFull(),
                             Forms\Components\TextInput::make('title')
                                 ->required()
