@@ -11,10 +11,10 @@
 </head>
 
 <body>
-	<style></style>
-	.card-body {
-	font-family: 'Courier New', monospace;
-	}
+	<style>
+		.card-body {
+			font-family: 'Courier New', monospace;
+		}
 	</style>
 
 	<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light container py-5">
