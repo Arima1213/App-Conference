@@ -17,6 +17,9 @@ class home extends Controller
      */
     public function index()
     {
+        // pengecekan apakah ada conference
+        $isHaveConference = Conference::exists();
+
         $conference = Conference::where('is_active', true)
             ->whereHas('schedules', fn($q) => $q->where('start_time', '>=', now()))
             ->with([
@@ -71,7 +74,8 @@ class home extends Controller
             'offlineFees',
             'venue',
             'sponsors',
-            'importantDates'
+            'importantDates',
+            'isHaveConference'
         ));
     }
 }
