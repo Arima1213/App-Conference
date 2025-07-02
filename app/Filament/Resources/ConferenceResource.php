@@ -178,6 +178,7 @@ class ConferenceResource extends Resource
                                             'silver' => 'Silver',
                                             'bronze' => 'Bronze',
                                         ])
+                                        ->columnSpanFull()
                                         ->required()
                                         ->helperText('Select the sponsorship level.'),
                                     Forms\Components\TextInput::make('name')
