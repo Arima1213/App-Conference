@@ -171,6 +171,15 @@ class ConferenceResource extends Resource
                                 ->collapsible()
                                 ->schema([
                                     Forms\Components\Hidden::make('id'),
+                                    Forms\Components\Select::make('level')
+                                        ->label('Sponsor Level')
+                                        ->options([
+                                            'gold' => 'Gold',
+                                            'silver' => 'Silver',
+                                            'bronze' => 'Bronze',
+                                        ])
+                                        ->required()
+                                        ->helperText('Select the sponsorship level.'),
                                     Forms\Components\TextInput::make('name')
                                         ->required()
                                         ->label('Sponsor Name')
