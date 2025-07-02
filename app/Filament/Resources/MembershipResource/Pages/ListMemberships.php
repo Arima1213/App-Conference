@@ -39,7 +39,7 @@ class ListMemberships extends ListRecords
                 ])
                 ->action(function (array $data) {
                     $filePath = Storage::disk('public')->path($data['file']);
-                    Excel::import(new MembershipImport, $filePath);
+                    Excel::queueImport(new MembershipImport, $filePath);
 
                     Notification::make()
                         ->title('Import Completed')
