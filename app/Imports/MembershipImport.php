@@ -14,9 +14,9 @@ class MembershipImport implements ToModel
             return null;
         }
         return new Membership([
-            'nama_lengkap' => $row[0],
-            'no_hp' => $row[1],
-            'no_anggota' => $row[2],
+            'nama_lengkap' => $row[0] ?? null,
+            'no_hp' => $row[1] ?? null,
+            'no_anggota' => $row[2] ?? null,
         ]);
     }
 }
