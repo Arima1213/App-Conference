@@ -9,10 +9,14 @@ class MembershipImport implements ToModel
 {
     public function model(array $row)
     {
+        // Skip header row
+        if ($row[0] === 'nama_lengkap') {
+            return null;
+        }
         return new Membership([
-            'nama_lengkap' => $row['nama_lengkap'],
-            'no_hp' => $row['no_hp'],
-            'no_anggota' => $row['no_anggota'],
+            'nama_lengkap' => $row[0],
+            'no_hp' => $row[1],
+            'no_anggota' => $row[2],
         ]);
     }
 }
