@@ -55,6 +55,11 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn($state) => !empty($state) ? bcrypt($state) : null)
                     ->visibleOn('create')
                     ->placeholder('Enter password'),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 

@@ -27,7 +27,7 @@ function feeInput(string $label, string $type, string $currency)
 
 class ConferenceResource extends Resource
 {
-    use HasPageShield;
+    // use HasPageShield;
 
     protected function getShieldRedirectPath(): string
     {
