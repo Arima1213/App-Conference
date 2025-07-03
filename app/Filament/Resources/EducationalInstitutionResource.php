@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EducationalInstitutionResource\Pages;
 use App\Filament\Resources\EducationalInstitutionResource\RelationManagers;
 use App\Models\EducationalInstitution;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,6 +16,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EducationalInstitutionResource extends Resource
 {
+    use HasPageShield;
+
+    protected function getShieldRedirectPath(): string
+    {
+        return url('/manage');
+    }
     protected static ?string $model = EducationalInstitution::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
