@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SpeakerResource\Pages;
 use App\Filament\Resources\SpeakerResource\RelationManagers;
 use App\Models\Speaker;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,6 +16,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SpeakerResource extends Resource
 {
+    use HasPageShield;
+
+    protected function getShieldRedirectPath(): string
+    {
+        return url('/manage');
+    }
     protected static ?string $model = Speaker::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
