@@ -13,11 +13,8 @@ class paymentController extends Controller
     // fungsi pay
     public function pay(Request $request)
     {
-        // Ambil dan dekripsi payment id dari request
         $encryptedPaymentId = $request->input('payment');
         $paymentId = decrypt($encryptedPaymentId);
-
-        // Ambil invoice_code dari payment id
         $payment = \App\Models\Payment::find($paymentId);
 
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
