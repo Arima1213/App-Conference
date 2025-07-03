@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SponsorResource\Pages;
 use App\Filament\Resources\SponsorResource\RelationManagers;
 use App\Models\Sponsor;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,6 +17,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SponsorResource extends Resource
 {
+    use HasPageShield;
+
+    protected function getShieldRedirectPath(): string
+    {
+        return url('/manage');
+    }
     protected static ?string $model = Sponsor::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
