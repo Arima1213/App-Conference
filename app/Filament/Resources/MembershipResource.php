@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MembershipResource\Pages;
 use App\Models\Membership;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +14,12 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MembershipResource extends Resource
 {
+    use HasPageShield;
+
+    protected function getShieldRedirectPath(): string
+    {
+        return url('/manage');
+    }
     protected static ?string $model = Membership::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
