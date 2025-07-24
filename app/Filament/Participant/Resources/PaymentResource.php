@@ -62,8 +62,15 @@ class PaymentResource extends Resource
                     ->label('Invoice Code')
                     ->default('-')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('payment_status')
+                Tables\Columns\BadgeColumn::make('payment_status')
                     ->label('Payment Status')
+                    ->colors([
+                        'warning' => 'pending',
+                        'success' => 'paid',
+                        'danger' => 'failed',
+                        'warning' => 'challenge',
+                        'secondary' => 'expired',
+                    ])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Amount (IDR)')
@@ -74,6 +81,13 @@ class PaymentResource extends Resource
                     ->label('Payment Date')
                     ->dateTime('d M Y, H:i')
                     ->sortable(),
+                Tables\Columns\IconColumn::make('has_valid_token')
+                    ->label('Token Status')
+                    ->getStateUsing(fn(Payment $record) => $record->hasValidSnapToken())
+                    ->boolean()
+                    ->tooltip(fn(Payment $record) => $record->hasValidSnapToken()
+                        ? 'Valid token available'
+                        : 'New token will be generated'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('current_user')
@@ -84,14 +98,26 @@ class PaymentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('pay')
-                    ->label('Pay')
+                    ->label('Pay Now')
                     ->url(fn(Payment $record) => route('filament.participant.pages.payment-page', [
                         'payment' => encrypt($record->id),
                         'participant' => $record->participant_id,
                     ]))
                     ->icon('heroicon-o-credit-card')
+                    ->color('success')
                     ->openUrlInNewTab()
-                    ->visible(fn(Payment $record) => $record->payment_status !== 'paid'),
+                    ->visible(fn(Payment $record) => $record->canBePaid()),
+
+                Tables\Actions\Action::make('view_details')
+                    ->label('View Details')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->action(function (Payment $record) {
+                        // Add details modal or redirect logic here if needed
+                    })
+                    ->modalContent(fn(Payment $record) => view('filament.modals.payment-details', ['payment' => $record]))
+                    ->modalHeading('Payment Details')
+                    ->modalWidth('lg'),
             ]);
     }
 

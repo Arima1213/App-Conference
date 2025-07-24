@@ -3,8 +3,10 @@
 namespace App\Filament\Participant\Pages;
 
 use App\Models\Payment;
+use App\Services\PaymentService;
 use Filament\Pages\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentPage extends Page
 {
@@ -19,36 +21,24 @@ class PaymentPage extends Page
 
     public function mount(Request $request)
     {
-        $encryptedPaymentId = $request->input('payment');
-        $paymentId = decrypt($encryptedPaymentId);
+        try {
+            $encryptedPaymentId = $request->input('payment');
+            $paymentId = decrypt($encryptedPaymentId);
 
-        // Ambil data payment dari database
-        $payment = Payment::find($paymentId);
+            // Ambil data payment dari database
+            $payment = Payment::findOrFail($paymentId);
 
-        if (!$payment) {
-            abort(404, 'Payment not found.');
+            // Initialize PaymentService
+            $paymentService = app(PaymentService::class);
+
+            // Get snap token using service (handles existing token validation)
+            $this->snapToken = $paymentService->getSnapToken($payment);
+            $this->payment = $payment;
+
+            Log::info("Payment page mounted for payment {$payment->invoice_code}");
+        } catch (\Exception $e) {
+            Log::error('Payment page mount error: ' . $e->getMessage());
+            abort(404, 'Payment not found or cannot be processed: ' . $e->getMessage());
         }
-
-        // Konfigurasi Midtrans
-        \Midtrans\Config::$serverKey = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = env('APP_ENV') === 'production';
-        \Midtrans\Config::$isSanitized = true;
-        \Midtrans\Config::$is3ds = true;
-
-        // Parameter transaksi
-        $params = [
-            'transaction_details' => [
-                'order_id' => $payment->invoice_code,
-                'gross_amount' => $payment->amount,
-            ],
-            'customer_details' => [
-                'first_name' => $payment->participant->user->name ?? '',
-                'email' => $payment->participant->user->email ?? '',
-                'phone' => $payment->participant->phone ?? '',
-            ],
-        ];
-
-        $this->snapToken = \Midtrans\Snap::getSnapToken($params);
-        $this->payment = $payment;
     }
 }
