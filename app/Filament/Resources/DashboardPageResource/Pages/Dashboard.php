@@ -42,9 +42,28 @@ class Dashboard extends PagesDashboard
     protected function getHeaderWidgets(): array
     {
         return [
-            // Masukkan custom widget di sini jika ada
-            // Contoh:
-            // \App\Filament\Widgets\OverviewStats::class,
+            \App\Filament\Widgets\ConferenceOverviewWidget::class,
+            \App\Filament\Widgets\ParticipantStatsWidget::class,
+            \App\Filament\Widgets\FinancialOverviewWidget::class,
+        ];
+    }
+
+    public function getWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\PaymentStatusChart::class,
+            \App\Filament\Widgets\SponsorLevelChart::class,
+            \App\Filament\Widgets\RegistrationTrendChart::class,
+            \App\Filament\Widgets\RecentAttendanceWidget::class,
+            \App\Filament\Widgets\TopInstitutionsWidget::class,
+            \App\Filament\Widgets\QuickActionsWidget::class,
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\SystemHealthWidget::class,
         ];
     }
 }
