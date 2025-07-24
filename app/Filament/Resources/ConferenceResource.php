@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ConferenceResource\Pages;
 use App\Models\Conference;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,7 +27,7 @@ function feeInput(string $label, string $type, string $currency)
 
 class ConferenceResource extends Resource
 {
-    // use HasPageShield;
+    //
 
     protected function getShieldRedirectPath(): string
     {

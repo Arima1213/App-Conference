@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ParticipantResource\Pages;
 use App\Filament\Resources\ParticipantResource\RelationManagers;
 use App\Models\Participant;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ParticipantResource extends Resource
 {
-    use HasPageShield;
+
 
     protected function getShieldRedirectPath(): string
     {

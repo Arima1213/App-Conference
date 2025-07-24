@@ -6,7 +6,7 @@ use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Forms\ShieldSelectAllToggle;
 use App\Filament\Resources\RoleResource\Pages;
 use BezhanSalleh\FilamentShield\Support\Utils;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+
 use BezhanSalleh\FilamentShield\Traits\HasShieldFormComponents;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -22,7 +22,7 @@ use Illuminate\Validation\Rules\Unique;
 
 class RoleResource extends Resource implements HasShieldPermissions
 {
-    use HasPageShield;
+
 
     protected function getShieldRedirectPath(): string
     {
