@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <!-- White version for dark backgrounds -->
+
+  <!-- Squircle background -->
+  <path d="M20 8
+           C14 8 8 14 8 20
+           L8 60
+           C8 66 14 72 20 72
+           L60 72
+           C66 72 72 66 72 60
+           L72 20
+           C72 14 66 8 60 8
+           Z"
+        fill="rgba(255, 255, 255, 0.95)"
+        stroke="rgba(255, 255, 255, 0.3)"
+        stroke-width="1"/>
+
+  <!-- Hybrid P and medical cross design -->
+  <!-- Vertical bar of P and cross -->
+  <rect x="25" y="20" width="6" height="40" fill="#ffffff" rx="2"/>
+
+  <!-- Top horizontal bar of P -->
+  <rect x="25" y="20" width="20" height="6" fill="#ffffff" rx="2"/>
+
+  <!-- Middle horizontal bar (creates P shape and cross center) -->
+  <rect x="25" y="37" width="16" height="6" fill="#ffffff" rx="2"/>
+
+  <!-- Horizontal bar of cross -->
+  <rect x="35" y="37" width="20" height="6" fill="#ffffff" rx="2"/>
+
+  <!-- Bottom part of cross -->
+  <rect x="46" y="43" width="6" height="17" fill="#ffffff" rx="2"/>
+
+  <!-- Modern accent dots -->
+  <circle cx="58" cy="25" r="2.5" fill="#ffffff" opacity="0.8"/>
+  <circle cx="58" cy="35" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="58" cy="44" r="1.5" fill="#ffffff" opacity="0.4"/>
+</svg>

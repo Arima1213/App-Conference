@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <defs>
+    <!-- Apple-inspired gradient -->
+    <linearGradient id="ultimateGradient" x1="30%" y1="0%" x2="70%" y2="100%">
+      <stop offset="0%" style="stop-color:#007AFF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0056CC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#003D99;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle shape (Apple's favorite) -->
+  <path d="M40 8 C57 8 72 15 72 40 C72 65 57 72 40 72 C23 72 8 65 8 40 C8 15 23 8 40 8 Z"
+        fill="url(#ultimateGradient)"/>
+
+  <!-- Super minimal "P" + medical cross hybrid -->
+  <g transform="translate(40,40)" fill="white">
+    <!-- Core shape combining P and medical cross -->
+    <path d="M-8 -15 L-8 15 L-3 15 L-3 3 L5 3 Q10 3 10 -3 Q10 -9 5 -9 L-3 -9 L-3 -15 Z"/>
+    <!-- Cross horizontal extension -->
+    <rect x="5" y="-2" width="8" height="4" rx="2"/>
+    <!-- Three subtle dots for the three P's -->
+    <g opacity="0.7">
+      <circle cx="8" cy="8" r="1.5"/>
+      <circle cx="12" cy="8" r="1"/>
+      <circle cx="15" cy="8" r="0.5"/>
+    </g>
+  </g>
+</svg>

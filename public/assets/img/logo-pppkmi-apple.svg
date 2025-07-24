@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <!-- Premium gradient like Apple -->
+    <linearGradient id="appleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007AFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#005ECC;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Subtle shadow -->
+    <filter id="appleShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Perfect circle like Apple logo -->
+  <circle cx="50" cy="50" r="45" fill="url(#appleGradient)" filter="url(#appleShadow)"/>
+
+  <!-- Ultra-minimalist design -->
+  <g transform="translate(50,50)">
+    <!-- Medical cross - simplified -->
+    <g fill="white">
+      <!-- Horizontal -->
+      <rect x="-12" y="-3" width="24" height="6" rx="3"/>
+      <!-- Vertical -->
+      <rect x="-3" y="-12" width="6" height="24" rx="3"/>
+    </g>
+
+    <!-- Subtle document indicator -->
+    <g transform="translate(0,18)" opacity="0.9">
+      <rect x="-8" y="-4" width="16" height="8" rx="2" fill="white"/>
+      <!-- Micro lines for text -->
+      <g stroke="#007AFF" stroke-width="0.8" opacity="0.7">
+        <line x1="-5" y1="-1" x2="3" y2="-1"/>
+        <line x1="-5" y1="1" x2="5" y2="1"/>
+      </g>
+    </g>
+  </g>
+</svg>
