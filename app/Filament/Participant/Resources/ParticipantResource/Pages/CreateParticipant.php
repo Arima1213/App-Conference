@@ -3,8 +3,11 @@
 namespace App\Filament\Participant\Resources\ParticipantResource\Pages;
 
 use App\Filament\Participant\Resources\ParticipantResource;
+use App\Mail\ParticipantRegistrationMail;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class CreateParticipant extends CreateRecord
 {
@@ -103,36 +106,69 @@ class CreateParticipant extends CreateRecord
     {
         $participant = $this->getRecord();
         if ($participant) {
-            // Buat data payment untuk participant
-            $payment = new \App\Models\Payment();
-            $payment->participant_id = $participant->id;
-            $payment->seminar_fee_id = $participant->seminar_fee_id;
-            // Cek apakah user sudah pernah mendaftar di conference ini
-            $userId = Auth::user()->id;
-            $conferenceId = $participant->conference_id;
-            $hasRegistered = \App\Models\Participant::where('user_id', $userId)
-                ->exists();
+            try {
+                // Buat data payment untuk participant
+                $payment = new \App\Models\Payment();
+                $payment->participant_id = $participant->id;
+                $payment->seminar_fee_id = $participant->seminar_fee_id;
 
-            // Ambil seminar fee terkait
-            $seminarFee = $participant->seminarFee;
+                // Cek apakah user sudah pernah mendaftar di conference ini
+                $userId = Auth::user()->id;
+                $conferenceId = $participant->conference_id;
+                $hasRegistered = \App\Models\Participant::where('user_id', $userId)
+                    ->exists();
 
-            // Pilih amount sesuai status pendaftaran
-            if ($seminarFee) {
-                $payment->amount = $hasRegistered ? $seminarFee->regular_price : $seminarFee->early_bird_price;
-            } else {
-                $payment->amount = 0;
+                // Ambil seminar fee terkait
+                $seminarFee = $participant->seminarFee;
+
+                // Pilih amount sesuai status pendaftaran
+                if ($seminarFee) {
+                    $payment->amount = $hasRegistered ? $seminarFee->regular_price : $seminarFee->early_bird_price;
+                } else {
+                    $payment->amount = 0;
+                }
+
+                $payment->payment_status = 'pending';
+                $payment->invoice_code = 'INV-' . strtoupper(uniqid());
+                $payment->save();
+
+                // Send registration email
+                try {
+                    // Load participant with relations for email
+                    $participant->load(['user', 'conference', 'educationalInstitution', 'seminarFee']);
+
+                    Mail::to($participant->user->email)->send(new ParticipantRegistrationMail($participant));
+
+                    Log::info("Registration email sent successfully to: " . $participant->user->email);
+
+                    // Notifikasi sukses dengan info email
+                    \Filament\Notifications\Notification::make()
+                        ->title('Registration Successful!')
+                        ->body('Welcome email has been sent to ' . $participant->user->email . '. Please check your inbox and proceed to payment.')
+                        ->success()
+                        ->persistent()
+                        ->send();
+                } catch (\Exception $emailError) {
+                    Log::error("Failed to send registration email: " . $emailError->getMessage());
+
+                    // Notifikasi bahwa email gagal tapi registrasi berhasil
+                    \Filament\Notifications\Notification::make()
+                        ->title('Registration Successful - Email Issue')
+                        ->body('Registration completed but welcome email could not be sent. Please proceed to payment.')
+                        ->warning()
+                        ->persistent()
+                        ->send();
+                }
+            } catch (\Exception $e) {
+                Log::error("Registration error: " . $e->getMessage());
+
+                \Filament\Notifications\Notification::make()
+                    ->title('Registration Error')
+                    ->body('An error occurred during registration. Please try again or contact support.')
+                    ->danger()
+                    ->persistent()
+                    ->send();
             }
-            $payment->payment_status = 'pending';
-            $payment->invoice_code = 'INV-' . strtoupper(uniqid());
-            $payment->save();
-
-            // notifikasi sukses
-            \Filament\Notifications\Notification::make()
-                ->title('Registration Successful, Proceed to Payment')
-                ->body('Participant and payment have been created. The next step is to complete your payment.')
-                ->success()
-                ->persistent()
-                ->send();
         } else {
             \Filament\Notifications\Notification::make()
                 ->title('Failed to create participant or payment.')
