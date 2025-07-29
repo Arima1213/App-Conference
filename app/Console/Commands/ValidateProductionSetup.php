@@ -42,7 +42,7 @@ class ValidateProductionSetup extends Command
 
         $this->newLine();
         $this->info('🎯 Production validation completed!');
-        
+
         return 0;
     }
 
@@ -52,7 +52,7 @@ class ValidateProductionSetup extends Command
     private function validateEnvironment()
     {
         $this->info('📁 Environment Configuration:');
-        
+
         $checks = [
             'APP_ENV' => ['production', 'Expected: production'],
             'APP_DEBUG' => [false, 'Expected: false'],
@@ -82,11 +82,11 @@ class ValidateProductionSetup extends Command
     private function validateDatabase()
     {
         $this->info('🗄️ Database Configuration:');
-        
+
         try {
             DB::connection()->getPdo();
             $this->line('✅ Database connection: OK');
-            
+
             // Test database operations
             $tablesExist = [
                 'users' => Schema::hasTable('users'),
@@ -100,7 +100,6 @@ class ValidateProductionSetup extends Command
                 $status = $exists ? '✅' : '❌';
                 $this->line("{$status} Table {$table}: " . ($exists ? 'exists' : 'missing'));
             }
-            
         } catch (\Exception $e) {
             $this->line('❌ Database connection: FAILED');
             $this->error('Error: ' . $e->getMessage());
@@ -114,7 +113,7 @@ class ValidateProductionSetup extends Command
     private function validateEmail()
     {
         $this->info('📧 Email Configuration:');
-        
+
         $emailConfig = [
             'MAIL_MAILER' => config('mail.default'),
             'MAIL_HOST' => config('mail.mailers.smtp.host'),
@@ -151,7 +150,7 @@ class ValidateProductionSetup extends Command
     private function validateMidtrans()
     {
         $this->info('💳 Midtrans Configuration:');
-        
+
         $midtransConfig = [
             'MIDTRANS_MERCHANT_ID' => config('midtrans.merchant_id'),
             'MIDTRANS_CLIENT_KEY' => config('midtrans.client_key'),
@@ -170,7 +169,7 @@ class ValidateProductionSetup extends Command
             try {
                 $response = Http::withBasicAuth(config('midtrans.server_key'), '')
                     ->get('https://api.sandbox.midtrans.com/v2/ping');
-                
+
                 if ($response->successful()) {
                     $this->line('✅ Midtrans API connection: OK');
                 } else {
@@ -189,7 +188,7 @@ class ValidateProductionSetup extends Command
     private function validateQueue()
     {
         $this->info('🔄 Queue Configuration:');
-        
+
         $queueConfig = [
             'QUEUE_CONNECTION' => config('queue.default'),
             'QUEUE_FAILED_DRIVER' => config('queue.failed.driver'),
@@ -204,7 +203,7 @@ class ValidateProductionSetup extends Command
         try {
             $pendingJobs = DB::table('jobs')->count();
             $failedJobs = DB::table('failed_jobs')->count();
-            
+
             $this->line("✅ Pending jobs: {$pendingJobs}");
             $this->line("✅ Failed jobs: {$failedJobs}");
         } catch (\Exception $e) {
@@ -219,7 +218,7 @@ class ValidateProductionSetup extends Command
     private function validateStorage()
     {
         $this->info('📂 Storage & Permissions:');
-        
+
         $directories = [
             'storage/logs' => storage_path('logs'),
             'storage/app' => storage_path('app'),
@@ -231,7 +230,7 @@ class ValidateProductionSetup extends Command
         foreach ($directories as $name => $path) {
             $exists = file_exists($path);
             $writable = is_writable($path);
-            
+
             if ($exists && $writable) {
                 $this->line("✅ {$name}: OK");
             } elseif ($exists && !$writable) {

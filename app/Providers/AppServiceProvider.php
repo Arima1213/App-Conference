@@ -13,7 +13,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register custom commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \App\Console\Commands\CpanelStorageLink::class,
+                \App\Console\Commands\QueueMonitorCommand::class,
+                \App\Console\Commands\ValidateProductionSetup::class,
+                \App\Console\Commands\BackupProduction::class,
+                \App\Console\Commands\CleanupExpiredPayments::class,
+                \App\Console\Commands\CpanelQueueSetup::class,
+                \App\Console\Commands\TestAllCommands::class,
+            ]);
+        }
     }
 
     /**
@@ -63,7 +74,30 @@ class AppServiceProvider extends ServiceProvider
                 ->dailyAt('02:00')
                 ->withoutOverlapping()
                 ->runInBackground()
-                ->appendOutputTo(storage_path('logs/queue-cleanup.log'));
+                ->appendOutputTo(storage_path('logs/cleanup.log'));
+
+            // Daily backup at 3 AM (production only)
+            if (app()->environment('production')) {
+                $schedule->command('production:backup --type=full')
+                    ->dailyAt('03:00')
+                    ->withoutOverlapping()
+                    ->runInBackground()
+                    ->appendOutputTo(storage_path('logs/backup.log'));
+
+                // Manual storage sync (fallback method)
+                $schedule->call(function () {
+                    $target = storage_path('app/public');
+                    $link = public_path('storage');
+
+                    if (!file_exists($link)) {
+                        mkdir($link, 0755, true);
+                    }
+
+                    if (is_dir($target)) {
+                        shell_exec("cp -r {$target}/* {$link}/ 2>/dev/null");
+                    }
+                })->weekly()->name('manual-storage-sync');
+            }
 
             // Email queue processing (high priority)
             $schedule->command('queue:work --queue=emails,high,default --stop-when-empty --timeout=300')
