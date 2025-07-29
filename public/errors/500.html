@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>500 - Server Error | PPPKMI Conference</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+            .error-container {
+                text-align: center;
+                max-width: 600px;
+                padding: 2rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            }
+            .error-code {
+                font-size: 8rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+                background: linear-gradient(45deg, #ff6b6b, #feca57);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .error-title {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                font-weight: 600;
+            }
+            .error-message {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+                line-height: 1.6;
+            }
+            .home-button {
+                display: inline-block;
+                padding: 12px 30px;
+                background: linear-gradient(45deg, #3742fa, #2f3542);
+                color: white;
+                text-decoration: none;
+                border-radius: 50px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                margin: 0 10px;
+            }
+            .home-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            }
+            .retry-button {
+                background: linear-gradient(45deg, #26de81, #20bf6b);
+            }
+            .logo {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 2rem;
+                background: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                color: #667eea;
+                font-weight: bold;
+            }
+            .pulse {
+                animation: pulse 2s ease-in-out infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.7;
+                }
+            }
+            .contact-info {
+                margin-top: 2rem;
+                padding-top: 2rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.3);
+                font-size: 0.9rem;
+                opacity: 0.8;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="error-container">
+            <div class="logo pulse">⚠️</div>
+            <div class="error-code">500</div>
+            <h1 class="error-title">Server Error</h1>
+            <p class="error-message">
+                Maaf, terjadi kesalahan internal server.<br />
+                Tim kami telah diberitahu dan sedang bekerja untuk
+                memperbaikinya.
+            </p>
+            <a href="/" class="home-button">🏠 Beranda</a>
+            <a
+                href="javascript:location.reload()"
+                class="home-button retry-button"
+                >🔄 Coba Lagi</a
+            >
+
+            <div class="contact-info">
+                <p>Jika masalah berlanjut, silakan hubungi:</p>
+                <p><strong>Email:</strong> support@pppkmi-conference.com</p>
+                <p>
+                    <strong>Error ID:</strong>
+                    <?php echo date('YmdHis') . '-' . substr(md5(time()), 0, 8); ?>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -28,7 +28,6 @@ class QueueManagementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(self::getJobsQuery())
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('Job ID')

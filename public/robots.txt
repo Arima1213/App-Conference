@@ -1,2 +1,34 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow sensitive areas
+Disallow: /manage/
+Disallow: /participant/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /app/
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /database/
+Disallow: /resources/
+Disallow: /routes/
+Disallow: /tests/
+Disallow: /*.env$
+Disallow: /*.log$
+Disallow: /*?*
+
+# Allow specific files
+Allow: /assets/
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /svg/
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap.xml
+
+# Crawl-delay for better server performance
+Crawl-delay: 1
+
+# Sitemap location (create this file if needed)
+Sitemap: https://your-domain.com/sitemap.xml
