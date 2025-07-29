@@ -5,16 +5,19 @@
 
     RewriteEngine On
 
-    # Force HTTPS (untuk production)
+    # Force HTTPS hanya untuk production (deteksi environment)
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
+    RewriteCond %{HTTP_HOST} !:\d+ [NC]
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Block access to sensitive files
+    # Block access to sensitive files only
     RewriteRule ^\.env$ - [F,L]
-    RewriteRule ^\.git - [F,L]
+    RewriteRule ^\.git/ - [F,L]
     RewriteRule ^composer\.(json|lock)$ - [F,L]
     RewriteRule ^package\.json$ - [F,L]
-    RewriteRule ^\..*$ - [F,L]
+    RewriteRule ^artisan$ - [F,L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -35,26 +38,30 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# Security Headers
+# Security Headers (hanya untuk production)
 <IfModule mod_headers.c>
+    # Aktifkan header security hanya jika bukan localhost
+    SetEnvIf Host "localhost" local_env
+    SetEnvIf Host "127.0.0.1" local_env
+
     # Prevent clickjacking
-    Header always append X-Frame-Options SAMEORIGIN
+    Header always append X-Frame-Options SAMEORIGIN env=!local_env
 
     # MIME type sniffing protection
-    Header always set X-Content-Type-Options nosniff
+    Header always set X-Content-Type-Options nosniff env=!local_env
 
     # XSS Protection
-    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-XSS-Protection "1; mode=block" env=!local_env
 
     # Referrer Policy
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin" env=!local_env
 
-    # Content Security Policy (adjust as needed)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;"
+    # Content Security Policy (relaxed untuk development)
+    Header always set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:; style-src 'self' 'unsafe-inline' https: http:; font-src 'self' https: http: data:; img-src 'self' data: https: http:; connect-src 'self' https: http: ws: wss:;" env=!local_env
 
-    # Remove Server Header
-    Header unset Server
-    Header unset X-Powered-By
+    # Remove Server Header (hanya production)
+    Header unset Server env=!local_env
+    Header unset X-Powered-By env=!local_env
 </IfModule>
 
 # Compression for better performance
@@ -123,10 +130,11 @@
     ExpiresByType text/html "access plus 1 day"
 </IfModule>
 
-# Block access to Laravel directories and files
+# Block access to Laravel directories (kecuali storage dan assets)
 <IfModule mod_alias.c>
-    RedirectMatch 403 /\..*$
-    RedirectMatch 403 /storage/.*$
+    # Hanya blokir folder sensitif, bukan assets
+    RedirectMatch 403 /\.git/.*$
+    RedirectMatch 403 /\.env$
     RedirectMatch 403 /app/.*$
     RedirectMatch 403 /bootstrap/.*$
     RedirectMatch 403 /config/.*$
@@ -135,36 +143,45 @@
     RedirectMatch 403 /routes/.*$
     RedirectMatch 403 /tests/.*$
     RedirectMatch 403 /vendor/.*$
+    RedirectMatch 403 /composer\.(json|lock)$
+    RedirectMatch 403 /artisan$
+</IfModule>
+
+# Allow access to assets, storage, and uploads
+<IfModule mod_rewrite.c>
+    # Izinkan akses ke folder assets, storage, uploads
+    RewriteCond %{REQUEST_URI} ^/(assets|storage|uploads|css|js|img|fonts|svg)/ [NC]
+    RewriteRule ^(.*)$ - [L]
 </IfModule>
 
 # Disable directory browsing
-Options -Indexes
+Options -Indexes +FollowSymLinks
 
 # Protect important files
 <Files .env>
-    Order allow,deny
-    Deny from all
+    Require all denied
 </Files>
 
 <Files composer.json>
-    Order allow,deny
-    Deny from all
+    Require all denied
 </Files>
 
 <Files composer.lock>
-    Order allow,deny
-    Deny from all
+    Require all denied
 </Files>
 
 <Files package.json>
-    Order allow,deny
-    Deny from all
+    Require all denied
 </Files>
 
 <Files artisan>
-    Order allow,deny
-    Deny from all
+    Require all denied
 </Files>
+
+# Allow access to common asset file types
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webm|pdf)$">
+    Require all granted
+</FilesMatch>
 
 # Limit file upload size (adjust as needed)
 <IfModule mod_php.c>
@@ -175,7 +192,7 @@ Options -Indexes
     php_value memory_limit 256M
 </IfModule>
 
-# Error pages (create custom error pages if needed)
-ErrorDocument 403 /errors/403.html
-ErrorDocument 404 /errors/404.html
-ErrorDocument 500 /errors/500.html
+# Error pages (hanya jika file ada)
+# ErrorDocument 403 /errors/403.html
+# ErrorDocument 404 /errors/404.html
+# ErrorDocument 500 /errors/500.html

@@ -1,0 +1,15 @@
+# Laravel Development .htaccess
+# Simple .htaccess for development environment
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect to public folder
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ /public/$1 [L]
+</IfModule>
+
+# Allow access to all files in development
+<RequireAll>
+    Require all granted
+</RequireAll>
